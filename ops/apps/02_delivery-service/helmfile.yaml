@@ -1,0 +1,23 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: delivery-service-db
+    namespace: {{ .Values.global.namespace }}
+    chart: bitnami/postgresql
+    version: 10.3.18
+    labels:
+      role: db
+    values:
+      - db.yaml.gotmpl
+  - name: delivery-service
+    namespace: {{ .Values.global.namespace }}
+    chart: charts/delivery-service
+    labels:
+      role: app
+    values:
+      - app.yaml.gotmpl
+    needs:
+      - {{ .Values.global.namespace }}/delivery-service-db

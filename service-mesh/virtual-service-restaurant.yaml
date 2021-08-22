@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: restaurant-service
+spec:
+  hosts:
+    - happy-takeaway.com
+    - restaurant-service.happy-takeaway.svc.cluster.local
+  gateways:
+    - api-gateway  
+  http:
+    - name: "restaurant-service"
+      match:
+        - uri:
+            prefix: "/restaurant"
+      rewrite:
+        uri: "/"        
+      route:
+        - destination:
+            host: restaurant-service.happy-takeaway.svc.cluster.local

@@ -1,0 +1,53 @@
+quarkus:
+  datasource:
+    db-kind: postgresql
+    jdbc:
+      url: jdbc:postgresql://${DB_HOST}:${DB_PORT:5432}/${DB_NAME}
+    reactive:
+      url: postgresql://${DB_HOST}:${DB_PORT:5432}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  hibernate-orm:
+    database:
+      default-schema: happy_takeaway
+  flyway:
+    schemas:
+      - happy_takeaway
+    migrate-at-start: true
+    baseline-on-migrate: true
+  redis:
+    hosts: redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT:6379}
+  container-image:
+    build: false
+    push: false
+    group: happy-takeaway
+    registry:
+    insecure: true
+kafka:
+  bootstrap:
+    servers: ${KAFKA_SERVER}:${KAFKA_PORT:9092}
+  group:
+    id: delivery-service
+mp:
+  messaging:
+    outgoing:
+      delivery-pickup-invitation:
+        connector: smallrye-kafka
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+    incoming:
+      delivery-pickup-invitation-accepted:
+        connector: smallrye-kafka
+        value:
+          deserializer: io.vividcode.happytakeaway.delivery.service.DeliveryPickupInvitationAcceptedEventDeserializer
+"%dev":
+  quarkus:
+    http:
+      port: 8091
+    grpc:
+      server:
+        port: 9002
+"%test":
+  app:
+    delivery:
+      check-interval: 5

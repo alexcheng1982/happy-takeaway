@@ -1,0 +1,8 @@
+environments:
+  default:
+  dev:
+  test:
+  prod:
+
+helmfiles:
+- path: "apps/02_*/helmfile.yaml"

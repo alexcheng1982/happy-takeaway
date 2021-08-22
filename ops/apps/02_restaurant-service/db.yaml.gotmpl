@@ -1,0 +1,6 @@
+postgresqlDatabase: {{ .Values.restaurantService.db.name }}
+postgresqlUsername: postgres
+persistence:
+  enabled: true
+  storageClass: {{ .Values.restaurantService.db.storage.storageClass | quote }}
+  size: {{ .Values.restaurantService.db.storage.size | quote }}

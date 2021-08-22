@@ -1,0 +1,13 @@
+quarkus:
+  redis:
+    hosts: redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT:6379}
+  container-image:
+    build: false
+    push: false
+    group: happy-takeaway
+    registry:
+    insecure: true
+"%dev":
+  quarkus:
+    http:
+      port: 8085

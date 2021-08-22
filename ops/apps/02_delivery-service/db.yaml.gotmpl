@@ -1,0 +1,6 @@
+postgresqlDatabase: {{ .Values.deliveryService.db.name }}
+postgresqlUsername: postgres
+persistence:
+  enabled: true
+  storageClass: {{ .Values.deliveryService.db.storage.storageClass | quote }}
+  size: {{ .Values.deliveryService.db.storage.size | quote }}

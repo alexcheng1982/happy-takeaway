@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: restaurant-service
+spec:
+  host: restaurant-service.happy-takeaway.svc.cluster.local
+  trafficPolicy:
+    loadBalancer:
+      simple: LEAST_CONN
+  subsets:
+    - name: v1
+      labels:
+        app.vividcode.io/service-version: "1"
+    - name: v2
+      labels:
+        app.vividcode.io/service-version: "2"

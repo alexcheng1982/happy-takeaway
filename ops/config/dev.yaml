@@ -1,0 +1,31 @@
+elasticsearch:
+  replicas: 1
+  minimumMasterNodes: 1
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1500Mi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"
+  storage:
+    storageClass: standard
+    size: 1Gi
+redis:
+  replicaCount: 0    
+restaurantService:
+  db:
+    storage:
+      storageClass: standard
+      size: 1Gi
+orderService:
+  db:  
+    storage:
+      storageClass: standard
+      size: 1Gi
+deliveryService:
+  db:
+    storage:
+      storageClass: standard
+      size: 1Gi        

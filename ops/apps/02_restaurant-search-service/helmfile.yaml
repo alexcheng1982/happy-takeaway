@@ -1,0 +1,13 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: restaurant-search-service
+    namespace: {{ .Values.global.namespace }}
+    chart: charts/restaurant-search-service
+    labels:
+      role: app
+    values:
+      - app.yaml.gotmpl

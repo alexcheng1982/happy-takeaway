@@ -1,0 +1,12 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: jaeger
+    namespace: {{ .Values.global.namespace }}
+    chart: jaegertracing/jaeger
+    version: 0.42.1
+    values:
+      - values.yaml.gotmpl

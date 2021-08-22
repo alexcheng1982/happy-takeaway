@@ -1,0 +1,8 @@
+image:
+  repository: {{ printf "%s/%s" .Values.imageRepo .Values.imageName.orderService | quote }}
+  tag: {{ requiredEnv "APP_VERSION" | quote }}
+db:
+  name: {{ .Values.orderService.db.name | quote }} 
+jaeger:
+  host: {{ .Values.supportingService.jaeger.host | quote }} 
+  port: {{ .Values.supportingService.jaeger.port | quote }}   

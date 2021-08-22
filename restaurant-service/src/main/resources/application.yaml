@@ -1,0 +1,116 @@
+quarkus:
+  datasource:
+    db-kind: postgresql
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    jdbc:
+      url: jdbc:postgresql://${DB_HOST}:${DB_PORT:5432}/${DB_NAME}
+  hibernate-orm:
+    database:
+      default-schema: happy_takeaway
+  flyway:
+    schemas:
+      - happy_takeaway
+    migrate-at-start: true
+    baseline-on-migrate: true
+  hibernate-search-orm:
+    elasticsearch:
+      version: 7
+      hosts: ${ES_HOST:localhost}:${ES_PORT:9200}
+  kafka:
+    health:
+      enabled: true
+  grpc:
+    clients:
+      order-service:
+        host: ${ORDER_SERVICE_HOST}
+        port: ${ORDER_SERVICE_PORT}
+  jaeger:
+    enabled: true
+    agent-host-port: ${JAEGER_HOST:localhost}:${JAEGER_PORT:6831}
+    service-name: restaurant-service
+    sampler-type: const
+    sampler-param: 1
+  #  oidc:
+  #    auth-server-url: ${OIDC_AUTH_SERVER}
+  #    client-id: ${OIDC_CLIENT_ID}
+  #    credentials:
+  #      secret: ${OIDC_SECRET}
+  #    tls:
+  #      verification: none
+  #  keycloak:
+  #    policy-enforcer:
+  #      enable: true
+  #  log:
+  #    sentry:
+  #      ~: true
+  #      dsn: ${SENTRY_DSN}
+  #      in-app-packages: "io.vividcode.happytakeaway"
+  #      environment: ${quarkus.profile}
+  #      release: ${APP_VERSION}
+  #      server-name: ${SERVER_NAME}
+  container-image:
+    build: false
+    push: false
+    group: happy-takeaway
+    registry:
+    insecure: true
+#  kubernetes:
+#    image-pull-policy: IfNotPresent
+#    namespace: happy-takeaway
+#    labels:
+#      type: service
+#    env:
+#      vars:
+#        my-test-value: hello
+#    resources:
+#      requests:
+#        memory: 256Mi
+#        cpu: 250m
+#      limits:
+#        memory: 512Mi
+#        cpu: 500m
+kafka:
+  bootstrap:
+    servers: ${KAFKA_SERVER}:${KAFKA_PORT:9092}
+  group:
+    id: restaurant-service
+  key:
+    deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+  value:
+    deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+  enable:
+    auto:
+      commit: true
+  auto:
+    commit:
+      interval:
+        ms: 1000
+app:
+  service:
+    file: ${FILE_SERVICE_URL}
+"%dev":
+  quarkus:
+    grpc:
+      server:
+        port: 9000
+    hibernate-search-orm:
+      schema-management:
+        strategy: create-or-update
+      automatic-indexing:
+        synchronization:
+          strategy: sync
+"%test":
+  quarkus:
+    http:
+      port: 10000
+    hibernate-search-orm:
+      schema-management:
+        strategy: drop-and-create
+      automatic-indexing:
+        synchronization:
+          strategy: sync
+    datasource:
+      jdbc:
+        driver: org.testcontainers.jdbc.ContainerDatabaseDriver
+        url: jdbc:tc:postgresql:12:///

@@ -1,0 +1,20 @@
+image:
+  repository: {{ printf "%s/%s" .Values.imageRepo .Values.imageName.restaurantService | quote }}
+  tag: {{ requiredEnv "APP_VERSION" | quote }}
+db:
+  name: {{ .Values.restaurantService.db.name | quote }} 
+  host: {{ printf "%s-db-postgresql" .Release.Name | quote }}
+  port: 5432
+  user: "postgres"
+  password:
+    secretName: {{ printf "%s-db-postgresql" .Release.Name | quote }}
+    secretKey: "postgresql-password" 
+kafka:
+  host: {{ .Values.supportingService.kafka.host | quote }} 
+  port: {{ .Values.supportingService.kafka.port | quote }} 
+elasticsearch:
+  host: {{ .Values.supportingService.elasticsearch.host | quote }} 
+  port: {{ .Values.supportingService.elasticsearch.port | quote }}  
+jaeger:
+  host: {{ .Values.supportingService.jaeger.host | quote }} 
+  port: {{ .Values.supportingService.jaeger.port | quote }} 

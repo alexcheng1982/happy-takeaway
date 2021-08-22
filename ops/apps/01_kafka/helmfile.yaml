@@ -1,0 +1,12 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: kafka
+    namespace: {{ .Values.global.namespace }}
+    chart: bitnami/kafka
+    version: 12.11.0
+    values:
+      - values.yaml.gotmpl

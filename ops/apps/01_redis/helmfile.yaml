@@ -1,0 +1,12 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: redis
+    namespace: {{ .Values.global.namespace }}
+    chart: bitnami/redis
+    version: 14.0.1
+    values:
+      - values.yaml.gotmpl

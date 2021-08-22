@@ -1,0 +1,23 @@
+filebeatConfig:
+  filebeat.yml: |
+    filebeat.autodiscover:
+        providers:
+          - type: kubernetes
+            templates:
+              - config:
+                - type: container
+                  paths:
+                    - "/var/log/containers/*-${data.kubernetes.container.id}.log"
+    output.elasticsearch:
+        hosts: ['${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}']
+        index: "filebeat-%{+yyyy.MM.dd}"
+    setup.template:
+      name: "filebeat"
+      pattern: "filebeat-*"
+      overwrite: true
+      settings:
+        index.number_of_shards: 1
+        index.number_of_replicas: 0 
+    logging:
+      metrics:
+        enabled: false

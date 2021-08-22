@@ -1,0 +1,9 @@
+image:
+  repository: {{ printf "%s/%s" .Values.imageRepo .Values.imageName.restaurantSearchService | quote }}
+  tag: {{ requiredEnv "APP_VERSION" | quote }}
+redis:
+  host: {{ .Values.supportingService.redis.host }}
+  port: {{ .Values.supportingService.redis.port }}
+  password:
+    secretName: {{ .Values.supportingService.redis.password.secretName }}
+    secretKey: {{ .Values.supportingService.redis.password.secretKey }}  

@@ -1,0 +1,32 @@
+quarkus:
+  container-image:
+    build: false
+    push: false
+    group: happy-takeaway
+    registry:
+    insecure: true
+kafka:
+  bootstrap:
+    servers: ${KAFKA_SERVER}:${KAFKA_PORT:9092}
+  group:
+    id: rider-service
+mp:
+  messaging:
+    incoming:
+      delivery-pickup-invitation:
+        connector: smallrye-kafka
+        value:
+          deserializer: io.vividcode.happytakeaway.rider.message.DeliveryPickupInvitationDeserializer
+    outgoing:
+      delivery-pickup-invitation-accepted:
+        connector: smallrye-kafka
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      delivery-pickup-invitation-declined:
+        connector: smallrye-kafka
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+"%dev":
+  quarkus:
+    http:
+      port: 8084

@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: mobile-api-service
+spec:
+  hosts:
+    - happy-takeaway.com
+    - mobile-api-graphql.happy-takeaway.svc.cluster.local
+  gateways:
+    - api-gateway
+  http:
+    - name: "mobile-api-graphql"
+      match:
+        - uri:
+            prefix: "/mobile-api"
+      rewrite:
+        uri: "/"   
+      route:
+        - destination:
+            host: mobile-api-graphql.happy-takeaway.svc.cluster.local

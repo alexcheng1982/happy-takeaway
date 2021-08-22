@@ -1,0 +1,12 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: keycloak
+    namespace: {{ .Values.global.namespace }}
+    chart: bitnami/keycloak
+    version: 2.4.6
+    values:
+      - values.yaml.gotmpl

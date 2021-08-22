@@ -1,0 +1,15 @@
+replicas: {{ .Values.elasticsearch.replicas }}
+minimumMasterNodes: {{ .Values.elasticsearch.minimumMasterNodes }}
+clusterHealthCheckParams: {{ .Values.elasticsearch.clusterHealthCheckParams }}
+volumeClaimTemplate:
+  storageClassName: {{ .Values.elasticsearch.storage.storageClass | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.elasticsearch.storage.size | quote }} 
+resources:
+  requests:
+    cpu: {{ .Values.elasticsearch.resources.requests.cpu | quote }}
+    memory: {{ .Values.elasticsearch.resources.requests.memory | quote }}
+  limits:  
+    cpu: {{ .Values.elasticsearch.resources.limits.cpu | quote }}
+    memory: {{ .Values.elasticsearch.resources.limits.memory | quote }}       

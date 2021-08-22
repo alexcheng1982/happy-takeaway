@@ -1,0 +1,3 @@
+elasticsearch:
+  replicas: 3
+  minimumMasterNodes: 2

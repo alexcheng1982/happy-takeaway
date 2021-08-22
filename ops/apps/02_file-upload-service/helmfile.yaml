@@ -1,0 +1,13 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: file-upload-service
+    namespace: {{ .Values.global.namespace }}
+    chart: charts/file-upload-service
+    labels:
+      role: app
+    values:
+      - app.yaml.gotmpl

@@ -1,0 +1,13 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: rider-service
+    namespace: {{ .Values.global.namespace }}
+    chart: charts/rider-service
+    labels:
+      role: app
+    values:
+      - app.yaml.gotmpl

@@ -1,0 +1,92 @@
+version: '3'
+
+services:
+  restaurant-postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: puser
+      POSTGRES_PASSWORD: ppassword
+      POSTGRES_DB: happy-takeaway
+    ports:
+      - 6432:5432
+  order-postgres:
+    image: debezium/postgres:12-alpine
+    environment:
+      POSTGRES_USER: puser
+      POSTGRES_PASSWORD: ppassword
+      POSTGRES_DB: happy-takeaway
+    ports:
+      - 6433:5432
+  delivery-postgres:
+    image: debezium/postgres:12-alpine
+    environment:
+      POSTGRES_USER: puser
+      POSTGRES_PASSWORD: ppassword
+      POSTGRES_DB: happy-takeaway
+    ports:
+      - 6434:5432
+  redis:
+    image: bitnami/redis:6.2.1
+    environment:
+      - REDIS_PASSWORD=rpassword
+    ports:
+      - 6379:6379
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.0
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
+  zookeeper:
+    image: debezium/zookeeper:1.4.1.Final
+    ports:
+      - 2181:2181
+    restart: on-failure
+  kafka:
+    image: debezium/kafka:1.4.1.Final
+    ports:
+      - 9092:9092
+      - 29092:29092
+    environment:
+      - ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://:9092,EXTERNAL://:29092
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,EXTERNAL://localhost:29092
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+    links:
+      - zookeeper
+    depends_on:
+      - zookeeper
+    restart: on-failure
+  kafka-connect:
+    image: debezium/connect:1.4.1.Final
+    environment:
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=happy_takeaway_config
+      - OFFSET_STORAGE_TOPIC=happy_takeaway_offset
+      - BOOTSTRAP_SERVERS=kafka:9092
+    ports:
+      - 8083:8083
+    links:
+      - kafka
+    depends_on:
+      - kafka
+    restart: on-failure
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686
+      - 14268:14268
+  keycloak:
+    image: quay.io/keycloak/keycloak:10.0.2
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - PROXY_ADDRESS_FORWARDING=true
+    ports:
+      - 8180:8080
+      - 8543:8443

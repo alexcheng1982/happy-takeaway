@@ -1,0 +1,61 @@
+global:
+  namespace: happy-takeaway
+imageRepo: happy-takeaway
+imageName:
+  restaurantService: restaurant-service
+  orderService: order-service  
+  deliveryService: delivery-service
+  riderService: rider-service
+  fileUploadService: file-upload-service
+  restaurantSearchService: restaurant-search-service
+  mobileApiGraphqlService: mobile-api-graphql
+elasticsearch:
+  replicas: 1
+  minimumMasterNodes: 1
+  clusterHealthCheckParams: "wait_for_status=green&timeout=1s"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"
+  storage:
+    storageClass: default
+    size: 30Gi 
+redis:
+  replicaCount: 1       
+supportingService:
+  elasticsearch:
+    host: elasticsearch-master
+    port: 9200
+  kafka:
+    host: kafka
+    port: 9092
+  redis:
+    host: redis-master
+    port: 6379
+    password:
+      secretName: redis
+      secretKey: redis-password
+  jaeger:
+    host: jaeger-agent
+    port: 6831 
+restaurantService:
+  db:
+    name: restaurant
+    storage:
+      storageClass: default
+      size: 10Gi 
+orderService:
+  db:
+    name: order 
+    storage:
+      storageClass: default
+      size: 10Gi
+deliveryService:
+  db:
+    name: delivery
+    storage:
+      storageClass: default
+      size: 10Gi      

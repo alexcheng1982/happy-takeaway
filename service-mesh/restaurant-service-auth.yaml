@@ -1,0 +1,14 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: restaurant-service
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: restaurant-service
+  jwtRules:
+    - issuer: "http://localhost:10080/auth/realms/happy-takeaway"
+      audiences:
+        - mobile-api
+      jwksUri: http://keycloak.happy-takeaway.svc.cluster.local/auth/realms/happy-takeaway/protocol/openid-connect/certs
+      outputPayloadToHeader: "X-JWT-PAYLOAD"

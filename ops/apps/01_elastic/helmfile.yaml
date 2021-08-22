@@ -1,0 +1,26 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: elasticsearch
+    namespace: {{ .Values.global.namespace }}
+    chart: elastic/elasticsearch
+    version: 7.11.2
+    values:
+      - es.values.yaml.gotmpl    
+  - name: kibana
+    namespace: {{ .Values.global.namespace }}
+    chart: elastic/kibana
+    version: 7.11.2
+    wait: false
+    values:
+      - kibana.values.yaml.gotmpl  
+  - name: filebeat
+    namespace: {{ .Values.global.namespace }}
+    chart: elastic/filebeat
+    version: 7.11.2
+    wait: false
+    values:
+      - filebeat.values.yaml.gotmpl   

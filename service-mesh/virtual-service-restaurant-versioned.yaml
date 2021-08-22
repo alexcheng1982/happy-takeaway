@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: restaurant-service
+spec:
+  hosts:
+    - restaurant-service.happy-takeaway.svc.cluster.local
+  http:
+    - name: "restaurant-service"
+      route:
+        - destination:
+            host: restaurant-service.happy-takeaway.svc.cluster.local
+            subset: v1
+          weight: 50
+        - destination:
+            host: restaurant-service.happy-takeaway.svc.cluster.local
+            subset: v2
+          weight: 50

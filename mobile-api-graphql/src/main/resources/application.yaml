@@ -1,0 +1,18 @@
+restaurant-service-api/mp-rest/url: http://${RESTAURANT_SERVICE_HOST}:${RESTAURANT_SERVICE_PORT}
+restaurant-service-api/mp-rest/scope: javax.inject.Singleton
+quarkus:
+  grpc:
+    clients:
+      order-service:
+        host: ${ORDER_SERVICE_HOST}
+        port: ${ORDER_SERVICE_PORT}
+  container-image:
+    build: false
+    push: false
+    group: happy-takeaway
+    registry:
+    insecure: true
+"%dev":
+  quarkus:
+    http:
+      port: 8088

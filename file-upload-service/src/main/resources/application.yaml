@@ -1,0 +1,16 @@
+quarkus:
+  http:
+    body:
+      handle-file-uploads: true
+      uploads-directory: u
+      delete-uploaded-files-on-end: false
+  container-image:
+    build: false
+    push: false
+    group: happy-takeaway
+    registry:
+    insecure: true
+"%dev":
+  quarkus:
+    http:
+      port: 8081  

@@ -1,0 +1,30 @@
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+  - name: elastic
+    url: https://helm.elastic.co
+  - name: jaegertracing
+    url: https://jaegertracing.github.io/helm-charts
+
+environments:
+  default:
+    values:
+      - ../../config/default.yaml
+  dev:
+    values:
+      - ../../config/default.yaml
+      - ../../config/dev.yaml
+  test:
+    values:
+      - ../../config/default.yaml
+      - ../../config/test.yaml
+  prod:
+    values:
+      - ../../config/default.yaml
+      - ../../config/prod.yaml
+
+helmDefaults:
+  verify: false
+  wait: false
+  skipDeps: false
+  timeout: 600

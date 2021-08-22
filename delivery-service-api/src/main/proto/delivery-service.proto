@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.vividcode.happytakeaway.delivery.api.v1";
+option java_outer_classname = "DeliveryServiceProto";
+
+message UpdateRiderPositionRequest {
+  string riderId = 1;
+  double lng = 2;
+  double lat = 3;
+  int64 timestamp = 4;
+}
+
+message UpdateRiderPositionResponse {
+  string riderId = 1;
+  bool result = 2;
+}
+
+message DisableRiderRequest {
+  string riderId = 1;
+}
+
+message DisableRiderResponse {
+  string riderId = 1;
+  bool result = 2;
+}
+
+service DeliveryService {
+  rpc UpdateRiderPosition (stream UpdateRiderPositionRequest) returns (stream UpdateRiderPositionResponse) {}
+  rpc DisableRider (DisableRiderRequest) returns (DisableRiderResponse) {}
+}

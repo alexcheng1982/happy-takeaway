@@ -1,0 +1,23 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: restaurant-service-db
+    namespace: {{ .Values.global.namespace }}
+    chart: bitnami/postgresql
+    version: 10.3.18
+    labels:
+      role: db
+    values:
+      - db.yaml.gotmpl
+  - name: restaurant-service
+    namespace: {{ .Values.global.namespace }}
+    chart: charts/restaurant-service
+    labels:
+      role: app
+    values:
+      - app.yaml.gotmpl
+    needs:
+      - {{ .Values.global.namespace }}/restaurant-service-db

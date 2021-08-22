@@ -1,0 +1,25 @@
+image: maven:3.6.3-openjdk-11
+
+services:
+  - docker:dind
+
+stages:
+  - build
+
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode --ntp"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_DRIVER: overlay2
+  REDIS_HOST: docker
+  ELASTICSEARCH_HOST: docker
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+build:
+  stage: build
+  script:
+    - mvn $MAVEN_CLI_OPTS package -DskipTests

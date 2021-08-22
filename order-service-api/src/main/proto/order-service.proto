@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.vividcode.happytakeaway.order.api.v1";
+option java_outer_classname = "OrderServiceProto";
+
+message Order {
+  string orderId = 1;
+  string userId = 2;
+  string restaurantId = 3;
+  string status = 4;
+  repeated OrderItem items = 5;
+}
+
+message OrderItem {
+  string itemId = 1;
+  int32 quantity = 2;
+  double price = 3;
+}
+
+message CreateOrderRequest {
+  string userId = 1;
+  string restaurantId = 2;
+  repeated OrderItem items = 3;
+}
+
+message CreateOrderResponse {
+  string orderId = 1;
+}
+
+message GetOrderRequest {
+  string orderId = 1;
+}
+
+message GetOrderResponse {
+  string orderId = 1;
+  string userId = 2;
+  string restaurantId = 3;
+  repeated OrderItem items = 4;
+}
+
+message ConfirmOrderRequest {
+  string orderId = 1;
+}
+
+message ConfirmOrderResponse {
+  string orderId = 1;
+  bool result = 2;
+}
+
+message Address {
+  double lng = 1;
+  double lat = 2;
+}
+
+message MarkAsReadyForDeliveryRequest {
+  string orderId = 1;
+  Address pickupAddress = 2;
+}
+
+message MarkAsReadyForDeliveryResponse {
+  string orderId = 1;
+  bool result = 2;
+}
+
+message PageRequest {
+  int32 page = 1;
+  int32 size = 2;
+}
+
+message OrdersResult {
+  int32 currentPage = 1;
+  int64 totalItems = 2;
+  int32 totalPages = 3;
+  repeated Order orders = 4;
+}
+
+message FindOrdersRequest {
+  string userId = 1;
+  string restaurantId = 2;
+  string status = 3;
+  PageRequest pageRequest = 4;
+}
+
+message FindOrdersResponse {
+  OrdersResult result = 1;
+}
+
+service OrderService {
+  rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse) {}
+  rpc GetOrder (stream GetOrderRequest) returns (stream GetOrderResponse) {}
+  rpc FindOrders (FindOrdersRequest) returns (FindOrdersResponse) {}
+  rpc ConfirmOrder (ConfirmOrderRequest) returns (ConfirmOrderResponse) {}
+  rpc MarkAsReadyForDelivery (MarkAsReadyForDeliveryRequest) returns (MarkAsReadyForDeliveryResponse) {}
+}

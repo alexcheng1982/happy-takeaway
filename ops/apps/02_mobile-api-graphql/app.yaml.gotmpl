@@ -1,0 +1,3 @@
+image:
+  repository: {{ printf "%s/%s" .Values.imageRepo .Values.imageName.mobileApiGraphqlService | quote }}
+  tag: {{ requiredEnv "APP_VERSION" | quote }}

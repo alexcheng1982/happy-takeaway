@@ -1,0 +1,7 @@
+provisionDataStore:
+  cassandra: false
+storage:
+  type: elasticsearch
+  elasticsearch: 
+    host: {{ .Values.supportingService.elasticsearch.host | quote }}
+    port: {{ .Values.supportingService.elasticsearch.port }}

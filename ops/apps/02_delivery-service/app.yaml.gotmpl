@@ -1,0 +1,20 @@
+image:
+  repository: {{ printf "%s/%s" .Values.imageRepo .Values.imageName.deliveryService | quote }}
+  tag: {{ requiredEnv "APP_VERSION" | quote }}
+db:
+  name: {{ .Values.deliveryService.db.name | quote }} 
+  host: {{ printf "%s-db-postgresql" .Release.Name | quote }}
+  port: 5432
+  user: "postgres"
+  password:
+    secretName: {{ printf "%s-db-postgresql" .Release.Name | quote }}
+    secretKey: "postgresql-password" 
+kafka:
+  host: {{ .Values.supportingService.kafka.host | quote }} 
+  port: {{ .Values.supportingService.kafka.port | quote }}
+redis:
+  host: {{ .Values.supportingService.redis.host }}
+  port: {{ .Values.supportingService.redis.port }}
+  password:
+    secretName: {{ .Values.supportingService.redis.password.secretName }}
+    secretKey: {{ .Values.supportingService.redis.password.secretKey }}     

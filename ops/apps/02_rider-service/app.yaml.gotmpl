@@ -1,0 +1,6 @@
+image:
+  repository: {{ printf "%s/%s" .Values.imageRepo .Values.imageName.riderService | quote }}
+  tag: {{ requiredEnv "APP_VERSION" | quote }}
+kafka:
+  host: {{ .Values.supportingService.kafka.host | quote }} 
+  port: {{ .Values.supportingService.kafka.port | quote }}

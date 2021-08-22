@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: baidu-service
+spec:
+  hosts:
+    - www.baidu.com
+  gateways:
+    - mesh
+    - external-traffic
+  http:
+    - match:
+        - port: 80
+          gateways:
+            - mesh
+      route:
+        - destination:
+            host: istio-egressgateway.istio-system.svc.cluster.local
+    - match:
+        - port: 80
+          gateways:
+            - external-traffic
+      route:
+        - destination:
+            host: www.baidu.com

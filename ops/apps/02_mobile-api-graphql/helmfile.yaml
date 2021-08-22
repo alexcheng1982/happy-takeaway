@@ -1,0 +1,13 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: mobile-api-graphql
+    namespace: {{ .Values.global.namespace }}
+    chart: charts/mobile-api-graphql
+    labels:
+      role: app
+    values:
+      - app.yaml.gotmpl
