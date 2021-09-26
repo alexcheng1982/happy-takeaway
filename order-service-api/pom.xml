@@ -10,6 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>order-service-api</artifactId>
+  <name>Order Service :: API</name>
 
   <dependencies>
     <dependency>

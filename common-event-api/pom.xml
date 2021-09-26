@@ -10,6 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>common-event-api</artifactId>
+  <name>Common :: Event :: API</name>
 
   <build>
     <plugins>

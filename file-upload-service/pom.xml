@@ -10,6 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>file-upload-service</artifactId>
+  <name>File Upload Service</name>
 
   <dependencies>
     <dependency>
