@@ -1,7 +1,2 @@
-# happy-takeaway-quarkus
+# Happy Takeaway (快乐外卖)
 
-## Restaurant service
-
-### API first
-
-Restaurant management API

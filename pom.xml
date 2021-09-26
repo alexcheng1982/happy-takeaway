@@ -36,24 +36,24 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
-    <quarkus.platform.version>2.0.2.Final</quarkus.platform.version>
+    <quarkus.platform.version>2.2.3.Final</quarkus.platform.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <quarkus-plugin.version>2.0.2.Final</quarkus-plugin.version>
+    <quarkus-plugin.version>2.2.3.Final</quarkus-plugin.version>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <lombok.version>1.18.20</lombok.version>
-    <guava.version>30.0-jre</guava.version>
+    <guava.version>31.0-jre</guava.version>
     <testcontainers.version>1.15.3</testcontainers.version>
     <javafaker.version>1.0.2</javafaker.version>
-    <assertj.version>3.19.0</assertj.version>
-    <awaitility.version>4.0.3</awaitility.version>
+    <assertj.version>3.21.0</assertj.version>
+    <awaitility.version>4.1.0</awaitility.version>
     <datastax-driver.version>4.7.2</datastax-driver.version>
     <jandex-plugin.version>1.1.0</jandex-plugin.version>
     <grpc.version>1.37.0</grpc.version>
-    <debezium.version>1.6.0.Final</debezium.version>
+    <debezium.version>1.6.2.Final</debezium.version>
     <microprofile-openapi.version>2.0.1-RC1</microprofile-openapi.version>
     <opentracing-grpc.version>0.0.14</opentracing-grpc.version>
   </properties>
