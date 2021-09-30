@@ -8,7 +8,6 @@ import io.quarkus.test.common.ResourceArg;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vividcode.happytakeaway.common.PageRequest;
 import io.vividcode.happytakeaway.common.PagedResult;
-import io.vividcode.happytakeaway.common.ResourceNotFoundException;
 import io.vividcode.happytakeaway.restaurant.ElasticsearchResource;
 import io.vividcode.happytakeaway.restaurant.TestHelper;
 import io.vividcode.happytakeaway.restaurant.api.UpdateRestaurantResponse;

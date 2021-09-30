@@ -21,7 +21,12 @@
     </dependency>
     <dependency>
       <groupId>io.vividcode.happytakeaway</groupId>
-      <artifactId>common</artifactId>
+      <artifactId>common-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.vividcode.happytakeaway</groupId>
+      <artifactId>common-grpc</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

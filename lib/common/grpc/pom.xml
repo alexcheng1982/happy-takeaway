@@ -6,26 +6,21 @@
     <artifactId>parent</artifactId>
     <groupId>io.vividcode.happytakeaway</groupId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>restaurant-service-api</artifactId>
-  <name>API :: Restaurant Service</name>
+  <artifactId>common-grpc</artifactId>
+  <name>Lib :: Common :: gRPC</name>
 
   <dependencies>
     <dependency>
-      <groupId>io.vividcode.happytakeaway</groupId>
-      <artifactId>common-base</artifactId>
-      <version>${project.version}</version>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.microprofile.openapi</groupId>
-      <artifactId>microprofile-openapi-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-stub</artifactId>
     </dependency>
   </dependencies>
 

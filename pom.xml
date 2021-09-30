@@ -9,12 +9,13 @@
   <version>1.0.0-SNAPSHOT</version>
   <modules>
     <module>lib/common/base</module>
+    <module>lib/common/json</module>
+    <module>lib/common/test</module>
+    <module>lib/common/grpc</module>
     <module>lib/db/entity</module>
     <module>lib/event/api</module>
     <module>lib/event/producer</module>
     <module>lib/event/consumer</module>
-    <module>lib/common/json</module>
-    <module>lib/common/test</module>
     <module>api/restaurant-service-api</module>
     <module>api/order-service-api</module>
     <module>api/restaurant-search-service-api</module>

@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.vividcode.happytakeaway.common.ResourceNotFoundException;
 import io.vividcode.happytakeaway.restaurant.TestHelper;
 import io.vividcode.happytakeaway.restaurant.api.UpdateMenuItemResponse;
 import javax.inject.Inject;
