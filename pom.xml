@@ -8,26 +8,26 @@
   <artifactId>parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <modules>
-    <module>restaurant-service-api</module>
-    <module>restaurant-service</module>
-    <module>common</module>
-    <module>file-upload-service</module>
-    <module>restaurant-data-loader</module>
-    <module>restaurant-search-service</module>
-    <module>restaurant-search-service-api</module>
-    <module>order-service-api</module>
-    <module>order-service</module>
-    <module>common-db-entity</module>
-    <module>common-event-api</module>
-    <module>common-event-producer</module>
-    <module>common-event-consumer</module>
-    <module>delivery-service</module>
-    <module>delivery-service-api</module>
-    <module>rider-service-api</module>
-    <module>rider-service</module>
-    <module>common-json</module>
-    <module>common-test</module>
-    <module>mobile-api-graphql</module>
+    <module>lib/common/base</module>
+    <module>lib/db/entity</module>
+    <module>lib/event/api</module>
+    <module>lib/event/producer</module>
+    <module>lib/event/consumer</module>
+    <module>lib/common/json</module>
+    <module>lib/common/test</module>
+    <module>api/restaurant-service-api</module>
+    <module>api/order-service-api</module>
+    <module>api/restaurant-search-service-api</module>
+    <module>api/delivery-service-api</module>
+    <module>api/rider-service-api</module>
+    <module>service/restaurant-service</module>
+    <module>service/file-upload-service</module>
+    <module>service/restaurant-search-service</module>
+    <module>service/order-service</module>
+    <module>service/delivery-service</module>
+    <module>service/rider-service</module>
+    <module>service/mobile-api-graphql</module>
+    <module>tool/restaurant-data-loader</module>
   </modules>
   <packaging>pom</packaging>
   <name>Happy Takeaway</name>
