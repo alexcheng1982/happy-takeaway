@@ -1,6 +1,6 @@
 package io.vividcode.happytakeaway.event;
 
-import io.vividcode.happytakeaway.common.JsonMapper;
+import io.vividcode.happytakeaway.common.json.JsonMapper;
 import io.vividcode.happytakeaway.event.api.AggregateEntity;
 import io.vividcode.happytakeaway.event.api.DomainEvent;
 import javax.enterprise.context.ApplicationScoped;

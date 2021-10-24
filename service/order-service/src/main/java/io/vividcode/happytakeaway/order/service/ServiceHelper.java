@@ -1,6 +1,6 @@
 package io.vividcode.happytakeaway.order.service;
 
-import io.vividcode.happytakeaway.common.ResourceNotFoundException;
+import io.vividcode.happytakeaway.common.grpc.ResourceNotFoundException;
 
 public class ServiceHelper {
 

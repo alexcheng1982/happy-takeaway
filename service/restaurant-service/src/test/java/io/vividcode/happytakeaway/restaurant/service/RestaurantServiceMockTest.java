@@ -6,7 +6,7 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import io.vividcode.happytakeaway.common.PageRequest;
+import io.vividcode.happytakeaway.common.base.PageRequest;
 import io.vividcode.happytakeaway.restaurant.ElasticsearchResource;
 import io.vividcode.happytakeaway.restaurant.TestHelper;
 import io.vividcode.happytakeaway.restaurant.api.v1.Restaurant;

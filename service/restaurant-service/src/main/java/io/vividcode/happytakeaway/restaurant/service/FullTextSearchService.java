@@ -1,7 +1,7 @@
 package io.vividcode.happytakeaway.restaurant.service;
 
-import io.vividcode.happytakeaway.common.PageRequest;
-import io.vividcode.happytakeaway.common.PagedResult;
+import io.vividcode.happytakeaway.common.base.PageRequest;
+import io.vividcode.happytakeaway.common.base.PagedResult;
 import io.vividcode.happytakeaway.restaurant.api.FullTextSearchRequest;
 import io.vividcode.happytakeaway.restaurant.api.v1.Restaurant;
 import io.vividcode.happytakeaway.restaurant.api.v1.web.FullTextSearchResponse;

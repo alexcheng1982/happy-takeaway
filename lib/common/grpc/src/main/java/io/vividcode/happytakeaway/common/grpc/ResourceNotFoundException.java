@@ -1,4 +1,4 @@
-package io.vividcode.happytakeaway.common;
+package io.vividcode.happytakeaway.common.grpc;
 
 import io.grpc.Status;
 

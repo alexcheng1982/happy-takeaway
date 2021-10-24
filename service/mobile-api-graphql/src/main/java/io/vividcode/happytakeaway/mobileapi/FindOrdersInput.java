@@ -1,6 +1,6 @@
 package io.vividcode.happytakeaway.mobileapi;
 
-import io.vividcode.happytakeaway.common.PageRequest;
+import io.vividcode.happytakeaway.common.base.PageRequest;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.eclipse.microprofile.graphql.Name;

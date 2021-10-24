@@ -1,4 +1,4 @@
-package io.vividcode.happytakeaway.common;
+package io.vividcode.happytakeaway.common.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

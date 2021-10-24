@@ -1,6 +1,6 @@
 package io.vividcode.happytakeaway.restaurant.ws;
 
-import io.vividcode.happytakeaway.common.JsonMapper;
+import io.vividcode.happytakeaway.common.json.JsonMapper;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;

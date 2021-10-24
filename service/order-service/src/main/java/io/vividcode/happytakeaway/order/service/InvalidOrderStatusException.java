@@ -1,7 +1,7 @@
 package io.vividcode.happytakeaway.order.service;
 
 import io.grpc.Status;
-import io.vividcode.happytakeaway.common.GrpcStatusAware;
+import io.vividcode.happytakeaway.common.grpc.GrpcStatusAware;
 import io.vividcode.happytakeaway.order.entity.OrderStatus;
 
 public class InvalidOrderStatusException extends RuntimeException implements GrpcStatusAware {

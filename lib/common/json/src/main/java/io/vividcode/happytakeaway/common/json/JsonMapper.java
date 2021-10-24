@@ -1,4 +1,4 @@
-package io.vividcode.happytakeaway.common;
+package io.vividcode.happytakeaway.common.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;

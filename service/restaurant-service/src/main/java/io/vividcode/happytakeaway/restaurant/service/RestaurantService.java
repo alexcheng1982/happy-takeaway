@@ -1,8 +1,8 @@
 package io.vividcode.happytakeaway.restaurant.service;
 
 import io.quarkus.panache.common.Sort;
-import io.vividcode.happytakeaway.common.PageRequest;
-import io.vividcode.happytakeaway.common.PagedResult;
+import io.vividcode.happytakeaway.common.base.PageRequest;
+import io.vividcode.happytakeaway.common.base.PagedResult;
 import io.vividcode.happytakeaway.restaurant.api.CreateRestaurantRequest;
 import io.vividcode.happytakeaway.restaurant.api.DeleteRestaurantRequest;
 import io.vividcode.happytakeaway.restaurant.api.GetRestaurantRequest;

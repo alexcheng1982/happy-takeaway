@@ -1,7 +1,7 @@
 package io.vividcode.happytakeaway.restaurant.service;
 
 import io.quarkus.grpc.GrpcClient;
-import io.vividcode.happytakeaway.common.PagedResult;
+import io.vividcode.happytakeaway.common.base.PagedResult;
 import io.vividcode.happytakeaway.order.api.v1.ConfirmOrderRequest;
 import io.vividcode.happytakeaway.order.api.v1.FindOrdersRequest;
 import io.vividcode.happytakeaway.order.api.v1.FindOrdersRequest.Builder;

@@ -1,6 +1,6 @@
 package io.vividcode.happytakeaway.restaurant.api.v1.web;
 
-import io.vividcode.happytakeaway.common.PagedResult;
+import io.vividcode.happytakeaway.common.base.PagedResult;
 import io.vividcode.happytakeaway.restaurant.api.v1.Address;
 import io.vividcode.happytakeaway.restaurant.api.v1.MenuItem;
 import lombok.AllArgsConstructor;

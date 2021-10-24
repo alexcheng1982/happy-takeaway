@@ -1,7 +1,7 @@
 package io.vividcode.happytakeaway.restaurant;
 
 import com.github.javafaker.Faker;
-import io.vividcode.happytakeaway.common.PageRequest;
+import io.vividcode.happytakeaway.common.base.PageRequest;
 import io.vividcode.happytakeaway.restaurant.api.AssociateMenuItemsRequest;
 import io.vividcode.happytakeaway.restaurant.api.CreateMenuItemRequest;
 import io.vividcode.happytakeaway.restaurant.api.CreateMenuRequest;

@@ -1,6 +1,6 @@
 package io.vividcode.happytakeaway.restaurant.resource;
 
-import io.vividcode.happytakeaway.common.ResourceNotFoundException;
+import io.vividcode.happytakeaway.common.grpc.ResourceNotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;

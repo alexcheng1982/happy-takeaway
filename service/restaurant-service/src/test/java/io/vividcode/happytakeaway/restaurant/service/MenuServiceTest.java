@@ -4,8 +4,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.vividcode.happytakeaway.common.PageRequest;
-import io.vividcode.happytakeaway.common.PagedResult;
+import io.vividcode.happytakeaway.common.base.PageRequest;
+import io.vividcode.happytakeaway.common.base.PagedResult;
+import io.vividcode.happytakeaway.common.grpc.ResourceNotFoundException;
 import io.vividcode.happytakeaway.restaurant.TestHelper;
 import io.vividcode.happytakeaway.restaurant.api.AssociateMenuItemsResponse;
 import io.vividcode.happytakeaway.restaurant.api.UpdateMenuResponse;

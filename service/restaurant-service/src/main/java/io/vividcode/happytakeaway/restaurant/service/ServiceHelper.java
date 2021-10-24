@@ -1,6 +1,6 @@
 package io.vividcode.happytakeaway.restaurant.service;
 
-import io.vividcode.happytakeaway.common.ResourceNotFoundException;
+import io.vividcode.happytakeaway.common.grpc.ResourceNotFoundException;
 import io.vividcode.happytakeaway.restaurant.api.v1.Address;
 import io.vividcode.happytakeaway.restaurant.api.v1.MenuItem;
 import io.vividcode.happytakeaway.restaurant.api.v1.Restaurant;

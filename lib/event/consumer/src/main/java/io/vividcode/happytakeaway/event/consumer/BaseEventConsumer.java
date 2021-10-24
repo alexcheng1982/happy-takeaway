@@ -1,7 +1,7 @@
 package io.vividcode.happytakeaway.event.consumer;
 
 import io.smallrye.common.annotation.Identifier;
-import io.vividcode.happytakeaway.common.JsonMapper;
+import io.vividcode.happytakeaway.common.json.JsonMapper;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.nio.charset.StandardCharsets;

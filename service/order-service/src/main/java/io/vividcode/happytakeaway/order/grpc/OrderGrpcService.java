@@ -3,7 +3,7 @@ package io.vividcode.happytakeaway.order.grpc;
 import io.grpc.stub.StreamObserver;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.common.annotation.Blocking;
-import io.vividcode.happytakeaway.common.StreamObserverHelper;
+import io.vividcode.happytakeaway.common.grpc.StreamObserverHelper;
 import io.vividcode.happytakeaway.order.api.v1.ConfirmOrderRequest;
 import io.vividcode.happytakeaway.order.api.v1.ConfirmOrderResponse;
 import io.vividcode.happytakeaway.order.api.v1.CreateOrderRequest;
