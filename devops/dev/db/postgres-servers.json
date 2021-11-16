@@ -1,0 +1,34 @@
+{
+    "Servers": {
+        "1": {
+            "Group": "Happy-takeaway",
+            "Host": "restaurant-postgres",
+            "MaintenanceDB": "happy-takeaway",
+            "Name": "restaurant service",
+            "PassFile": "/restaurant-pgpassfile",
+            "Port": 5432,
+            "SSLMode": "prefer",
+            "Username": "puser"
+        },
+        "2": {
+            "Group": "Happy-takeaway",
+            "Host": "order-postgres",
+            "MaintenanceDB": "happy-takeaway",
+            "Name": "order service",
+            "PassFile": "/order-pgpassfile",
+            "Port": 5432,
+            "SSLMode": "prefer",
+            "Username": "puser"
+        },
+        "3": {
+            "Group": "Happy-takeaway",
+            "Host": "delivery-postgres",
+            "MaintenanceDB": "happy-takeaway",
+            "Name": "delivery service",
+            "PassFile": "/delivery-pgpassfile",
+            "Port": 5432,
+            "SSLMode": "prefer",
+            "Username": "puser"
+        }
+    }
+}

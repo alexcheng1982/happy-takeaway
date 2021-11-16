@@ -1,28 +1,43 @@
 version: '3'
 
 services:
-  restaurant-postgres:
-    image: postgres:12
+  pgadmin:
+    image: dpage/pgadmin4
     environment:
-      POSTGRES_USER: puser
-      POSTGRES_PASSWORD: ppassword
-      POSTGRES_DB: happy-takeaway
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_USER}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "${PGADMIN_PORT:-6555}:80"
+  restaurant-postgres:
+    image: debezium/postgres:12-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - restaurant-db:/data/postgres
     ports:
       - "6432:5432"
   order-postgres:
     image: debezium/postgres:12-alpine
     environment:
-      POSTGRES_USER: puser
-      POSTGRES_PASSWORD: ppassword
-      POSTGRES_DB: happy-takeaway
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - order-db:/data/postgres
     ports:
       - "6433:5432"
   delivery-postgres:
     image: debezium/postgres:12-alpine
     environment:
-      POSTGRES_USER: puser
-      POSTGRES_PASSWORD: ppassword
-      POSTGRES_DB: happy-takeaway
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - delivery-db:/data/postgres
     ports:
       - "6434:5432"
   redis:
@@ -104,3 +119,8 @@ services:
     ports:
       - "8180:8080"
       - "8543:8443"
+volumes:
+  pgadmin:
+  restaurant-db:
+  order-db:
+  delivery-db:
