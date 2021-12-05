@@ -29,7 +29,7 @@
     },
     volumes: [
       "pgadmin:/root/.pgadmin",
-      "./postgres-servers.json:/pgadmin4/servers.json"
+      "./db/postgres-servers.json:/pgadmin4/servers.json"
     ],
     ports: [
       "${PGADMIN_PORT:-6555}:80"

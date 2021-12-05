@@ -1,1 +1,0 @@
-mvn compile quarkus:dev -Ddebug=5008

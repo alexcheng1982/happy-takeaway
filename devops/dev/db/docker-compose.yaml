@@ -32,7 +32,7 @@
       - "${PGADMIN_PORT:-6555}:80"
     "volumes":
       - "pgadmin:/root/.pgadmin"
-      - "./postgres-servers.json:/pgadmin4/servers.json"
+      - "./db/postgres-servers.json:/pgadmin4/servers.json"
   "restaurant-postgres":
     "environment":
       "POSTGRES_DB": "${POSTGRES_DB}"
