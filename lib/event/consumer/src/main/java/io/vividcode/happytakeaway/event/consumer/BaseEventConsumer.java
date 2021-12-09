@@ -76,7 +76,6 @@ public abstract class BaseEventConsumer {
     }
   }
 
-  @Transactional
   private void processRecord(String consumerId, ConsumerRecord<String, String> record) {
     Headers headers = record.headers();
     String eventId = this.getHeader(headers, HEADER_ID);
