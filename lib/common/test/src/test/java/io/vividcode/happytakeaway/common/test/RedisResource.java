@@ -11,7 +11,7 @@ public class RedisResource implements QuarkusTestResourceLifecycleManager {
   private static final String redisPassword = "password";
 
   private final GenericContainer<?> redis = new GenericContainer<>(
-      DockerImageName.parse("bitnami/redis:6.2.1"))
+      DockerImageName.parse("bitnami/redis:6.2.6"))
       .withEnv("REDIS_PASSWORD", redisPassword);
 
   @Override
