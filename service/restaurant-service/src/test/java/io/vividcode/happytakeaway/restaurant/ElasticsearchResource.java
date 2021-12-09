@@ -12,7 +12,7 @@ public class ElasticsearchResource implements QuarkusTestResourceLifecycleManage
 
   @Override
   public void init(Map<String, String> initArgs) {
-    String version = initArgs.getOrDefault("version", "7.10.1");
+    String version = initArgs.getOrDefault("version", "7.10.2");
     this.elasticsearch = new ElasticsearchContainer(
         DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch-oss")
             .withTag(version))

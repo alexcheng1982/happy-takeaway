@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 @QuarkusTestResource(
     value = ElasticsearchResource.class,
-    initArgs = @ResourceArg(name = "version", value = "7.9.0")
+    initArgs = @ResourceArg(name = "version", value = "7.10.2")
 )
 @DisplayName("restaurant service")
 class RestaurantServiceTest {
