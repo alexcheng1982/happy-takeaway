@@ -17,7 +17,7 @@ public class ElasticsearchResource implements QuarkusTestResourceLifecycleManage
         DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch-oss")
             .withTag(version))
         .withEnv("discovery.type", "single-node")
-        .withStartupTimeout(Duration.ofMinutes(1));
+        .withStartupTimeout(Duration.ofMinutes(5));
   }
 
   @Override
