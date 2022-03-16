@@ -130,12 +130,6 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>cassandra</artifactId>
-        <version>${testcontainers.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
         <groupId>com.github.javafaker</groupId>
         <artifactId>javafaker</artifactId>
         <version>${javafaker.version}</version>
