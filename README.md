@@ -1,5 +1,7 @@
 # Happy Takeaway (快乐外卖)
 
+[![maven](https://github.com/alexcheng1982/happy-takeaway/actions/workflows/maven.yml/badge.svg)](https://github.com/alexcheng1982/happy-takeaway/actions/workflows/maven.yml)
+
 An example project about building cloud-native microservices apps using Quarkus.
 
 本应用是我的新书《Quarkus云原生微服务开发实战》的实战示例。在京东或淘宝搜索书名即可。
