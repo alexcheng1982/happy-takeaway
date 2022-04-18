@@ -3,9 +3,9 @@ package io.vividcode.happytakeaway.delivery.service;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.reactive.messaging.connectors.InMemoryConnector;
-import io.smallrye.reactive.messaging.connectors.InMemorySink;
-import io.smallrye.reactive.messaging.connectors.InMemorySource;
+import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
+import io.smallrye.reactive.messaging.providers.connectors.InMemorySink;
+import io.smallrye.reactive.messaging.providers.connectors.InMemorySource;
 import io.vividcode.happytakeaway.common.test.RedisResource;
 import io.vividcode.happytakeaway.delivery.api.v1.Address;
 import io.vividcode.happytakeaway.delivery.api.v1.DeliveryPickupInvitation;
@@ -56,7 +56,8 @@ public class DeliveryPickupInvitationTest {
         .source("delivery-pickup-invitation-accepted");
     String taskId = this.uuid();
     this.emitter.send(DeliveryTask.builder()
-        .id(taskId).restaurantAddress(Address.builder().lng(0).lat(0).build()).build())
+            .id(taskId).restaurantAddress(Address.builder().lng(0).lat(0).build())
+            .build())
         .toCompletableFuture().join();
     Awaitility.await()
         .pollInterval(Duration.ofSeconds(2))
