@@ -1,8 +1,8 @@
 package io.vividcode.happytakeaway.restaurant.resource;
 
-import io.quarkus.test.junit.NativeImageTest;
+import io.quarkus.test.junit.QuarkusIntegrationTest;
 
-@NativeImageTest
+@QuarkusIntegrationTest
 public class RestaurantResourceTestIT extends RestaurantResourceTest {
 
 }
