@@ -1,4 +1,4 @@
-package io.vividcode.happytakeaway.delivery.service;
+package io.vividcode.happytakeaway.restaurant;
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import java.time.Duration;
@@ -17,7 +17,6 @@ public class PostgreSQLResource implements QuarkusTestResourceLifecycleManager {
     this.postgres.start();
     return Map.of(
         "quarkus.datasource.jdbc.url", this.postgres.getJdbcUrl(),
-        "quarkus.datasource.reactive.url", this.postgres.getJdbcUrl().replaceFirst("^jdbc:", ""),
         "quarkus.datasource.username", this.postgres.getUsername(),
         "quarkus.datasource.password", this.postgres.getPassword()
     );
@@ -25,6 +24,6 @@ public class PostgreSQLResource implements QuarkusTestResourceLifecycleManager {
 
   @Override
   public void stop() {
-    this.postgres.stop();
+
   }
 }

@@ -110,7 +110,3 @@ app:
       automatic-indexing:
         synchronization:
           strategy: sync
-    datasource:
-      jdbc:
-        driver: org.testcontainers.jdbc.ContainerDatabaseDriver
-        url: jdbc:tc:postgresql:12:///
