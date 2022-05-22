@@ -2,9 +2,13 @@
 
 [![maven](https://github.com/alexcheng1982/happy-takeaway/actions/workflows/maven.yml/badge.svg)](https://github.com/alexcheng1982/happy-takeaway/actions/workflows/maven.yml)
 
+<a href="https://www.buymeacoffee.com/alexcheng1982" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 An example project about building cloud-native microservices apps using Quarkus.
 
 本应用是我的新书《Quarkus云原生微服务开发实战》的实战示例。在京东或淘宝搜索书名即可。
+
+[京东购买链接](https://item.jd.com/13438524.html)
 
 ![Quarkus书](./quarkus-book.png)
 
