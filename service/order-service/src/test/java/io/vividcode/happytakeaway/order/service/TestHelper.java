@@ -11,22 +11,21 @@ public class TestHelper {
 
   private static final Faker faker = Faker.instance();
 
-  private TestHelper() {
-
-  }
+  private TestHelper() {}
 
   public static CreateOrderRequest createOrderRequest() {
     return createOrderRequest(uuid(), uuid(), 3);
   }
 
-  public static CreateOrderRequest createOrderRequest(String userId, String restaurantId,
-      int numberOfItems) {
+  public static CreateOrderRequest createOrderRequest(
+      String userId, String restaurantId, int numberOfItems) {
     return CreateOrderRequest.newBuilder()
         .setUserId(userId)
         .setRestaurantId(restaurantId)
-        .addAllItems(IntStream.range(0, numberOfItems)
-            .mapToObj(i -> TestHelper.orderItem())
-            .collect(Collectors.toList()))
+        .addAllItems(
+            IntStream.range(0, numberOfItems)
+                .mapToObj(i -> TestHelper.orderItem())
+                .collect(Collectors.toList()))
         .build();
   }
 

@@ -14,8 +14,7 @@ import org.junit.jupiter.api.Test;
 @DisplayName("order service")
 class OrderServiceTest {
 
-  @Inject
-  OrderService orderService;
+  @Inject OrderService orderService;
 
   @Test
   @DisplayName("create order")
@@ -36,9 +35,8 @@ class OrderServiceTest {
     for (int i = 0; i < numberOfNonMatchingOrders; i++) {
       this.orderService.createOrder(TestHelper.createOrderRequest());
     }
-    FindOrdersResponse response = this.orderService.findOrders(FindOrdersRequest.newBuilder()
-        .setUserId(userId)
-        .build());
+    FindOrdersResponse response =
+        this.orderService.findOrders(FindOrdersRequest.newBuilder().setUserId(userId).build());
     assertThat(response.getResult().getTotalItems()).isEqualTo(numberOfMatchingOrders);
   }
 }

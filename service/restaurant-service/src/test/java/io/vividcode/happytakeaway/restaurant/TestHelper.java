@@ -24,32 +24,29 @@ import java.util.UUID;
 
 public class TestHelper {
 
-  private TestHelper() {
-  }
+  private TestHelper() {}
 
   private static final Faker faker = Faker.instance();
 
   public static RestaurantEntity createRestaurantEntity() {
     com.github.javafaker.Address address = faker.address();
-    RestaurantEntity restaurant = RestaurantEntity.builder()
-        .name(faker.funnyName().name())
-        .description(faker.lorem().paragraph(10))
-        .phoneNumber(faker.phoneNumber().phoneNumber())
-        .ownerId(uuid())
-        .addressCode(String.valueOf(faker.random().nextInt(10000)))
-        .addressLine(address.streetAddress())
-        .addressLng(Double.parseDouble(address.longitude()))
-        .addressLat(Double.parseDouble(address.latitude()))
-        .build();
+    RestaurantEntity restaurant =
+        RestaurantEntity.builder()
+            .name(faker.funnyName().name())
+            .description(faker.lorem().paragraph(10))
+            .phoneNumber(faker.phoneNumber().phoneNumber())
+            .ownerId(uuid())
+            .addressCode(String.valueOf(faker.random().nextInt(10000)))
+            .addressLine(address.streetAddress())
+            .addressLng(Double.parseDouble(address.longitude()))
+            .addressLat(Double.parseDouble(address.latitude()))
+            .build();
     restaurant.generateId();
     return restaurant;
   }
 
   public static GetRestaurantRequest getRestaurantRequest(String id, int numberOfMenuItems) {
-    return GetRestaurantRequest.builder()
-        .id(id)
-        .numberOfMenuItems(numberOfMenuItems)
-        .build();
+    return GetRestaurantRequest.builder().id(id).numberOfMenuItems(numberOfMenuItems).build();
   }
 
   public static CreateRestaurantRequest createRestaurantRequest() {
@@ -62,10 +59,7 @@ public class TestHelper {
   }
 
   public static UpdateRestaurantRequest updateRestaurantRequest(String id, String name) {
-    return UpdateRestaurantRequest.builder()
-        .id(id)
-        .name(name)
-        .build();
+    return UpdateRestaurantRequest.builder().id(id).name(name).build();
   }
 
   public static DeleteRestaurantRequest deleteRestaurantRequest(String id) {
@@ -98,32 +92,21 @@ public class TestHelper {
         .build();
   }
 
-  public static UpdateMenuRequest updateMenuRequest(String restaurantId, String menuId,
-      String name) {
-    return UpdateMenuRequest.builder()
-        .restaurantId(restaurantId)
-        .id(menuId)
-        .name(name)
-        .build();
+  public static UpdateMenuRequest updateMenuRequest(
+      String restaurantId, String menuId, String name) {
+    return UpdateMenuRequest.builder().restaurantId(restaurantId).id(menuId).name(name).build();
   }
 
   public static DeleteMenuRequest deleteMenuRequest(String restaurantId, String menuId) {
-    return DeleteMenuRequest.builder()
-        .restaurantId(restaurantId)
-        .id(menuId)
-        .build();
+    return DeleteMenuRequest.builder().restaurantId(restaurantId).id(menuId).build();
   }
 
   public static SetActiveMenuRequest setActiveMenuRequest(String restaurantId, String menuId) {
-    return SetActiveMenuRequest.builder()
-        .restaurantId(restaurantId)
-        .menuId(menuId)
-        .build();
+    return SetActiveMenuRequest.builder().restaurantId(restaurantId).menuId(menuId).build();
   }
 
-  public static AssociateMenuItemsRequest associateMenuItemsRequest(String restaurantId,
-      String menuId,
-      Set<String> menuItemIds) {
+  public static AssociateMenuItemsRequest associateMenuItemsRequest(
+      String restaurantId, String menuId, Set<String> menuItemIds) {
     return AssociateMenuItemsRequest.builder()
         .restaurantId(restaurantId)
         .menuId(menuId)
@@ -132,10 +115,7 @@ public class TestHelper {
   }
 
   public static GetMenuItemRequest getMenuItemRequest(String restaurantId, String menuItemId) {
-    return GetMenuItemRequest.builder()
-        .restaurantId(restaurantId)
-        .menuItemId(menuItemId)
-        .build();
+    return GetMenuItemRequest.builder().restaurantId(restaurantId).menuItemId(menuItemId).build();
   }
 
   public static CreateMenuItemRequest createMenuItemRequest(String restaurantId) {
@@ -147,8 +127,8 @@ public class TestHelper {
         .build();
   }
 
-  public static UpdateMenuItemRequest updateMenuItemRequest(String restaurantId, String menuItemId,
-      String name) {
+  public static UpdateMenuItemRequest updateMenuItemRequest(
+      String restaurantId, String menuItemId, String name) {
     return UpdateMenuItemRequest.builder()
         .restaurantId(restaurantId)
         .id(menuItemId)
@@ -156,12 +136,9 @@ public class TestHelper {
         .build();
   }
 
-  public static DeleteMenuItemRequest deleteMenuItemRequest(String restaurantId,
-      String menuItemId) {
-    return DeleteMenuItemRequest.builder()
-        .restaurantId(restaurantId)
-        .id(menuItemId)
-        .build();
+  public static DeleteMenuItemRequest deleteMenuItemRequest(
+      String restaurantId, String menuItemId) {
+    return DeleteMenuItemRequest.builder().restaurantId(restaurantId).id(menuItemId).build();
   }
 
   public static String uuid() {

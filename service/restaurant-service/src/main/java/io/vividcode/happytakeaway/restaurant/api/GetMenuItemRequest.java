@@ -8,8 +8,6 @@ import lombok.NonNull;
 @Builder
 public class GetMenuItemRequest {
 
-  @NonNull
-  private String restaurantId;
-  @NonNull
-  private String menuItemId;
+  @NonNull private String restaurantId;
+  @NonNull private String menuItemId;
 }

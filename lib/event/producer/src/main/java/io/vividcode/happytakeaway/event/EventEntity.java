@@ -17,8 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventEntity {
 
-  @Id
-  private String id;
+  @Id private String id;
 
   @Column(name = "type")
   private String type;

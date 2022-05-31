@@ -21,10 +21,8 @@ public class JwtHeaderConfiguration {
       String payload = context.request().getHeader("X-JWT-PAYLOAD");
       if (payload != null) {
         try {
-          HashMap<String, Object> data = objectMapper.readValue(
-              Base64.getDecoder().decode(payload),
-              new TypeReference<>() {
-              });
+          HashMap<String, Object> data =
+              objectMapper.readValue(Base64.getDecoder().decode(payload), new TypeReference<>() {});
           return (String) data.get("sub");
         } catch (IOException e) {
           context.response().setStatusCode(403).end("Invalid token");

@@ -6,11 +6,10 @@ import java.util.function.Function;
 
 public class StreamObserverHelper {
 
-  private StreamObserverHelper() {
-  }
+  private StreamObserverHelper() {}
 
-  public static <R, S> void sendSingleValue(StreamObserver<S> observer,
-      R req, Function<R, S> handler) {
+  public static <R, S> void sendSingleValue(
+      StreamObserver<S> observer, R req, Function<R, S> handler) {
     try {
       observer.onNext(handler.apply(req));
       observer.onCompleted();
@@ -19,8 +18,8 @@ public class StreamObserverHelper {
     }
   }
 
-  public static <R, S> StreamObserver<R> sendStream(StreamObserver<S> response,
-      Function<R, S> handler) {
+  public static <R, S> StreamObserver<R> sendStream(
+      StreamObserver<S> response, Function<R, S> handler) {
     return new StreamObserver<>() {
       @Override
       public void onNext(R req) {
@@ -44,8 +43,8 @@ public class StreamObserverHelper {
   }
 
   private static Status getStatus(Throwable cause) {
-    return cause instanceof GrpcStatusAware ?
-        ((GrpcStatusAware) cause).toStatus()
+    return cause instanceof GrpcStatusAware
+        ? ((GrpcStatusAware) cause).toStatus()
         : Status.INTERNAL.withDescription(cause.getMessage()).withCause(cause);
   }
 }

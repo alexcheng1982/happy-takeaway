@@ -27,9 +27,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 @GraphQLApi
 public class MobileApi {
 
-  @Inject
-  @RestClient
-  RestaurantServiceClient restaurantServiceClient;
+  @Inject @RestClient RestaurantServiceClient restaurantServiceClient;
 
   @Inject
   @GrpcClient("order-service")
@@ -52,8 +50,7 @@ public class MobileApi {
   @Query("findOrders")
   @Description("Find orders")
   public List<Order> findOrders(@Name("query") FindOrdersInput input) {
-    return this.getOrders(this.orderServiceBlockingStub
-        .findOrders(this.findOrdersRequest(input)));
+    return this.getOrders(this.orderServiceBlockingStub.findOrders(this.findOrdersRequest(input)));
   }
 
   @Name("restaurant")
@@ -62,9 +59,7 @@ public class MobileApi {
   }
 
   private CreateOrderResult createOrderResult(CreateOrderResponse response) {
-    return CreateOrderResult.builder()
-        .orderId(response.getOrderId())
-        .build();
+    return CreateOrderResult.builder().orderId(response.getOrderId()).build();
   }
 
   private FindOrdersRequest findOrdersRequest(FindOrdersInput input) {
@@ -79,15 +74,13 @@ public class MobileApi {
       builder.setStatus(input.getStatus());
     }
     if (input.getPageRequest() != null) {
-      builder.setPageRequest(PageRequest.newBuilder()
-          .setPage(input.getPageRequest().getPage())
-          .setSize(input.getPageRequest().getSize())
-          .build());
+      builder.setPageRequest(
+          PageRequest.newBuilder()
+              .setPage(input.getPageRequest().getPage())
+              .setSize(input.getPageRequest().getSize())
+              .build());
     } else {
-      builder.setPageRequest(PageRequest.newBuilder()
-          .setPage(0)
-          .setSize(10)
-          .build());
+      builder.setPageRequest(PageRequest.newBuilder().setPage(0).setSize(10).build());
     }
     return builder.build();
   }
@@ -98,32 +91,37 @@ public class MobileApi {
         .setRestaurantId(input.getRestaurantId())
         .addAllItems(
             input.getItems().stream()
-                .map(item ->
-                    OrderItem.newBuilder()
-                        .setItemId(item.getItemId())
-                        .setQuantity(item.getQuantity())
-                        .setPrice(item.getPrice().doubleValue())
-                        .build())
+                .map(
+                    item ->
+                        OrderItem.newBuilder()
+                            .setItemId(item.getItemId())
+                            .setQuantity(item.getQuantity())
+                            .setPrice(item.getPrice().doubleValue())
+                            .build())
                 .collect(Collectors.toList()))
         .build();
   }
 
   private List<Order> getOrders(FindOrdersResponse response) {
-    return response.getResult().getOrdersList()
-        .stream()
-        .map(order -> Order.builder()
-            .userId(order.getUserId())
-            .orderId(order.getOrderId())
-            .restaurantId(order.getRestaurantId())
-            .status(order.getStatus())
-            .items(order.getItemsList().stream()
-                .map(item -> io.vividcode.happytakeaway.mobileapi.OrderItem.builder()
-                    .itemId(item.getItemId())
-                    .quantity(item.getQuantity())
-                    .price(BigDecimal.valueOf(item.getPrice()))
+    return response.getResult().getOrdersList().stream()
+        .map(
+            order ->
+                Order.builder()
+                    .userId(order.getUserId())
+                    .orderId(order.getOrderId())
+                    .restaurantId(order.getRestaurantId())
+                    .status(order.getStatus())
+                    .items(
+                        order.getItemsList().stream()
+                            .map(
+                                item ->
+                                    io.vividcode.happytakeaway.mobileapi.OrderItem.builder()
+                                        .itemId(item.getItemId())
+                                        .quantity(item.getQuantity())
+                                        .price(BigDecimal.valueOf(item.getPrice()))
+                                        .build())
+                            .collect(Collectors.toList()))
                     .build())
-                .collect(Collectors.toList()))
-            .build())
         .collect(Collectors.toList());
   }
 }

@@ -12,7 +12,6 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class CreateMenuWebRequest {
 
-  @NonNull
-  private String name;
+  @NonNull private String name;
   private boolean current;
 }

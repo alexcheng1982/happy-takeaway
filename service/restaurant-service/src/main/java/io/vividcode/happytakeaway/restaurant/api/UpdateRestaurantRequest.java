@@ -9,8 +9,7 @@ import lombok.NonNull;
 @Builder
 public class UpdateRestaurantRequest {
 
-  @NonNull
-  private String id;
+  @NonNull private String id;
   private String name;
   private String description;
   private Address address;

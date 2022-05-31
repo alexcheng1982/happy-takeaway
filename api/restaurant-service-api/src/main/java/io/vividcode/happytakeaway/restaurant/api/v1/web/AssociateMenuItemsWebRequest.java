@@ -13,6 +13,5 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class AssociateMenuItemsWebRequest {
 
-  @NonNull
-  private Set<String> menuItems;
+  @NonNull private Set<String> menuItems;
 }

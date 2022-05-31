@@ -2,8 +2,7 @@ package io.vividcode.happytakeaway.common.grpc;
 
 import io.grpc.Status;
 
-public class ResourceNotFoundException extends RuntimeException
-    implements GrpcStatusAware {
+public class ResourceNotFoundException extends RuntimeException implements GrpcStatusAware {
 
   private final String resourceType;
   private final String resourceId;
@@ -15,8 +14,8 @@ public class ResourceNotFoundException extends RuntimeException
 
   @Override
   public String getMessage() {
-    return String
-        .format("Resource [%s] of type [%s] not found", this.resourceId, this.resourceType);
+    return String.format(
+        "Resource [%s] of type [%s] not found", this.resourceId, this.resourceType);
   }
 
   @Override

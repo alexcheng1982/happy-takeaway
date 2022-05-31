@@ -12,11 +12,9 @@ import io.vividcode.happytakeaway.delivery.service.DeliveryService;
 import javax.inject.Inject;
 
 @GrpcService
-public class DeliveryGrpcService extends
-    MutinyDeliveryServiceGrpc.DeliveryServiceImplBase {
+public class DeliveryGrpcService extends MutinyDeliveryServiceGrpc.DeliveryServiceImplBase {
 
-  @Inject
-  DeliveryService deliveryService;
+  @Inject DeliveryService deliveryService;
 
   @Override
   public Multi<UpdateRiderPositionResponse> updateRiderPosition(

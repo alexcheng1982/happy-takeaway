@@ -22,29 +22,33 @@ import javax.transaction.Transactional;
 @ApplicationScoped
 public class MenuService {
 
-  @Inject
-  RestaurantRepository restaurantRepository;
+  @Inject RestaurantRepository restaurantRepository;
 
-  @Inject
-  MenuRepository menuRepository;
+  @Inject MenuRepository menuRepository;
 
-  @Inject
-  MenuItemRepository menuItemRepository;
+  @Inject MenuItemRepository menuItemRepository;
 
-  @Inject
-  OwnerIdProvider ownerIdProvider;
+  @Inject OwnerIdProvider ownerIdProvider;
 
-  @Inject
-  MenuItemService menuItemService;
+  @Inject MenuItemService menuItemService;
 
   public MenuWithItems getMenu(GetMenuRequest request) {
     return this.restaurantRepository
         .findByOwnerIdAndId(this.ownerIdProvider.get(), request.getRestaurantId())
-        .map(restaurant -> this.menuRepository
-            .findById(request.getRestaurantId(), request.getMenuId())
-            .map(menu -> MenuWithItems.builder().id(menu.getId()).name(menu.getName()).items(
-                this.menuItemService.findMenuItems(menu.getId(), request.getPageRequest())
-            ).build()).orElseThrow(() -> ServiceHelper.menuNotFound(request.getMenuId())))
+        .map(
+            restaurant ->
+                this.menuRepository
+                    .findById(request.getRestaurantId(), request.getMenuId())
+                    .map(
+                        menu ->
+                            MenuWithItems.builder()
+                                .id(menu.getId())
+                                .name(menu.getName())
+                                .items(
+                                    this.menuItemService.findMenuItems(
+                                        menu.getId(), request.getPageRequest()))
+                                .build())
+                    .orElseThrow(() -> ServiceHelper.menuNotFound(request.getMenuId())))
         .orElseThrow(() -> ServiceHelper.restaurantNotFound(request.getRestaurantId()));
   }
 
@@ -52,17 +56,16 @@ public class MenuService {
   public String createMenu(CreateMenuRequest request) {
     return this.restaurantRepository
         .findByOwnerIdAndId(this.ownerIdProvider.get(), request.getRestaurantId())
-        .map(restaurant -> {
-          MenuEntity entity = MenuEntity.builder()
-              .restaurant(restaurant)
-              .name(request.getName())
-              .build();
-          this.menuRepository.persist(entity);
-          if (request.isCurrent()) {
-            restaurant.setActiveMenu(entity);
-          }
-          return entity.getId();
-        })
+        .map(
+            restaurant -> {
+              MenuEntity entity =
+                  MenuEntity.builder().restaurant(restaurant).name(request.getName()).build();
+              this.menuRepository.persist(entity);
+              if (request.isCurrent()) {
+                restaurant.setActiveMenu(entity);
+              }
+              return entity.getId();
+            })
         .orElseThrow(() -> ServiceHelper.restaurantNotFound(request.getRestaurantId()));
   }
 
@@ -70,15 +73,18 @@ public class MenuService {
   public UpdateMenuResponse updateMenu(UpdateMenuRequest request) {
     return this.restaurantRepository
         .findByOwnerIdAndId(this.ownerIdProvider.get(), request.getRestaurantId())
-        .map(restaurant -> this.menuRepository.findById(request.getRestaurantId(), request.getId())
-            .map(menu -> {
-              menu.setName(request.getName());
-              this.menuRepository.persist(menu);
-              return menu;
-            })
-            .orElseThrow(() -> ServiceHelper.menuNotFound(request.getId())))
-        .map(menu -> UpdateMenuResponse.builder().id(menu.getId()).name(menu.getName())
-            .build())
+        .map(
+            restaurant ->
+                this.menuRepository
+                    .findById(request.getRestaurantId(), request.getId())
+                    .map(
+                        menu -> {
+                          menu.setName(request.getName());
+                          this.menuRepository.persist(menu);
+                          return menu;
+                        })
+                    .orElseThrow(() -> ServiceHelper.menuNotFound(request.getId())))
+        .map(menu -> UpdateMenuResponse.builder().id(menu.getId()).name(menu.getName()).build())
         .orElseThrow(() -> ServiceHelper.restaurantNotFound(request.getRestaurantId()));
   }
 
@@ -86,17 +92,20 @@ public class MenuService {
   public boolean deleteMenu(DeleteMenuRequest request) {
     return this.restaurantRepository
         .findByOwnerIdAndId(this.ownerIdProvider.get(), request.getRestaurantId())
-        .map(restaurant -> this.menuRepository.findById(request.getRestaurantId(), request.getId())
-            .map(menu -> {
-              if (Objects.equals(restaurant.getActiveMenu(), menu)) {
-                restaurant.setActiveMenu(null);
-                this.restaurantRepository.persist(restaurant);
-              }
-              this.menuRepository.delete(menu);
-              return true;
-            })
-            .orElse(false)
-        )
+        .map(
+            restaurant ->
+                this.menuRepository
+                    .findById(request.getRestaurantId(), request.getId())
+                    .map(
+                        menu -> {
+                          if (Objects.equals(restaurant.getActiveMenu(), menu)) {
+                            restaurant.setActiveMenu(null);
+                            this.restaurantRepository.persist(restaurant);
+                          }
+                          this.menuRepository.delete(menu);
+                          return true;
+                        })
+                    .orElse(false))
         .orElseThrow(() -> ServiceHelper.restaurantNotFound(request.getRestaurantId()));
   }
 
@@ -104,18 +113,27 @@ public class MenuService {
   public AssociateMenuItemsResponse associateMenuItems(AssociateMenuItemsRequest request) {
     return this.restaurantRepository
         .findByOwnerIdAndId(this.ownerIdProvider.get(), request.getRestaurantId())
-        .map(restaurant -> this.menuRepository.findByIdOptional(request.getMenuId())
-            .map(menu -> {
-              menu.setItems(this.menuItemRepository
-                  .findAllByItemIds(request.getRestaurantId(), request.getMenuItems()));
-              return menu;
-            })
-            .orElseThrow(() -> ServiceHelper.menuNotFound(request.getMenuId())))
-        .map(menu -> AssociateMenuItemsResponse.builder().menuId(menu.getId())
-            .menuItems(menu.getItems().stream()
-                .map(MenuItemEntity::getId)
-                .collect(Collectors.toSet()))
-            .build())
+        .map(
+            restaurant ->
+                this.menuRepository
+                    .findByIdOptional(request.getMenuId())
+                    .map(
+                        menu -> {
+                          menu.setItems(
+                              this.menuItemRepository.findAllByItemIds(
+                                  request.getRestaurantId(), request.getMenuItems()));
+                          return menu;
+                        })
+                    .orElseThrow(() -> ServiceHelper.menuNotFound(request.getMenuId())))
+        .map(
+            menu ->
+                AssociateMenuItemsResponse.builder()
+                    .menuId(menu.getId())
+                    .menuItems(
+                        menu.getItems().stream()
+                            .map(MenuItemEntity::getId)
+                            .collect(Collectors.toSet()))
+                    .build())
         .orElseThrow(() -> ServiceHelper.restaurantNotFound(request.getRestaurantId()));
   }
 }

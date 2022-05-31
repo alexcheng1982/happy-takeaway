@@ -9,12 +9,9 @@ import lombok.NonNull;
 @Builder
 public class CreateMenuItemRequest {
 
-  @NonNull
-  private String restaurantId;
-  @NonNull
-  private String name;
+  @NonNull private String restaurantId;
+  @NonNull private String name;
   private String coverImage;
   private String description;
-  @NonNull
-  private BigDecimal price;
+  @NonNull private BigDecimal price;
 }

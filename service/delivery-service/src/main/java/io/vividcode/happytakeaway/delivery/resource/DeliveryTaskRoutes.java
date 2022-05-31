@@ -13,23 +13,20 @@ import org.eclipse.microprofile.openapi.annotations.info.Info;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @OpenAPIDefinition(
-    info = @Info(
-        title = "Delivery Task API",
-        version = "1.0.0"
-    ),
-    tags = @Tag(name = "DeliveryTask", description = "Delivery task")
-)
+    info = @Info(title = "Delivery Task API", version = "1.0.0"),
+    tags = @Tag(name = "DeliveryTask", description = "Delivery task"))
 @ApplicationScoped
 public class DeliveryTaskRoutes {
 
-  @Inject
-  DeliveryTaskRepository deliveryTaskRepository;
+  @Inject DeliveryTaskRepository deliveryTaskRepository;
 
   @Route(path = "/deliveryTasks", methods = HttpMethod.GET)
   @Tag(ref = "DeliveryTask")
   Multi<DeliveryTaskInfo> deliveryTasks() {
     return ReactiveRoutes.asEventStream(
-        this.deliveryTaskRepository.listTasks().toMulti()
+        this.deliveryTaskRepository
+            .listTasks()
+            .toMulti()
             .flatMap(list -> Multi.createFrom().iterable(list)));
   }
 }

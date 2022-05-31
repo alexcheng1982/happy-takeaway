@@ -17,8 +17,7 @@ public class DeliveryEventsHandler {
 
   private static final Logger LOGGER = Logger.getLogger(DeliveryEventsHandler.class);
 
-  @Inject
-  DeliveryService deliveryService;
+  @Inject DeliveryService deliveryService;
 
   @Incoming("delivery-task-created")
   @Outgoing("delivery-rider-search")
@@ -37,10 +36,9 @@ public class DeliveryEventsHandler {
   }
 
   @Incoming("delivery-pickup-invitation-accepted")
-  public Uni<Void> onPickupInvitationAccepted(
-      DeliveryPickupInvitationAcceptedEvent event) {
+  public Uni<Void> onPickupInvitationAccepted(DeliveryPickupInvitationAcceptedEvent event) {
     LOGGER.infov("Pickup invitation accepted: {0}", event);
-    return this.deliveryService
-        .acceptDeliveryPickupInvitation(event.getDeliveryTaskId(), event.getRiderId());
+    return this.deliveryService.acceptDeliveryPickupInvitation(
+        event.getDeliveryTaskId(), event.getRiderId());
   }
 }

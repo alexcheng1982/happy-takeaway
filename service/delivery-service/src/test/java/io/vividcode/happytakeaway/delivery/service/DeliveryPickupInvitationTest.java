@@ -35,47 +35,56 @@ public class DeliveryPickupInvitationTest {
   @Channel("delivery-task-created")
   Emitter<DeliveryTask> emitter;
 
-  @Inject
-  DeliveryService deliveryService;
+  @Inject DeliveryService deliveryService;
 
-  @Inject
-  @Any
-  InMemoryConnector connector;
+  @Inject @Any InMemoryConnector connector;
 
   @Test
   void testDeliveryPickup() {
     String riderId = this.uuid();
-    this.deliveryService.updateRiderPosition(
-        Multi.createFrom().items(
-            TestHelper.updateRiderPositionRequest(riderId, 0.00001, 0.00001),
-            TestHelper.updateRiderPositionRequest(this.uuid(), 0.00002, 0.00002)
-        )).collect().asList().await().indefinitely();
-    InMemorySink<DeliveryPickupInvitation> invitation = this.connector
-        .sink("delivery-pickup-invitation");
-    InMemorySource<DeliveryPickupInvitationAcceptedEvent> event = this.connector
-        .source("delivery-pickup-invitation-accepted");
+    this.deliveryService
+        .updateRiderPosition(
+            Multi.createFrom()
+                .items(
+                    TestHelper.updateRiderPositionRequest(riderId, 0.00001, 0.00001),
+                    TestHelper.updateRiderPositionRequest(this.uuid(), 0.00002, 0.00002)))
+        .collect()
+        .asList()
+        .await()
+        .indefinitely();
+    InMemorySink<DeliveryPickupInvitation> invitation =
+        this.connector.sink("delivery-pickup-invitation");
+    InMemorySource<DeliveryPickupInvitationAcceptedEvent> event =
+        this.connector.source("delivery-pickup-invitation-accepted");
     String taskId = this.uuid();
-    this.emitter.send(DeliveryTask.builder()
-            .id(taskId).restaurantAddress(Address.builder().lng(0).lat(0).build())
-            .build())
-        .toCompletableFuture().join();
+    this.emitter
+        .send(
+            DeliveryTask.builder()
+                .id(taskId)
+                .restaurantAddress(Address.builder().lng(0).lat(0).build())
+                .build())
+        .toCompletableFuture()
+        .join();
     Awaitility.await()
         .pollInterval(Duration.ofSeconds(2))
         .atMost(Duration.ofSeconds(10))
         .until(() -> invitation.received().size() == 2);
-    event.send(DeliveryPickupInvitationAcceptedEvent.builder()
-        .deliveryTaskId(taskId).riderId(riderId).build());
+    event.send(
+        DeliveryPickupInvitationAcceptedEvent.builder()
+            .deliveryTaskId(taskId)
+            .riderId(riderId)
+            .build());
     Awaitility.await()
         .pollInterval(Duration.ofSeconds(10))
         .atMost(Duration.ofSeconds(30))
-        .until(() -> {
-          DeliveryTaskInfo taskInfo = this.deliveryService.getTask(taskId)
-              .await().indefinitely();
-          return taskInfo != null &&
-              Objects.equals(taskInfo.getStatus(),
-                  DeliveryPickupInvitationStatus.SELECTED.name());
-        });
-
+        .until(
+            () -> {
+              DeliveryTaskInfo taskInfo =
+                  this.deliveryService.getTask(taskId).await().indefinitely();
+              return taskInfo != null
+                  && Objects.equals(
+                      taskInfo.getStatus(), DeliveryPickupInvitationStatus.SELECTED.name());
+            });
   }
 
   private String uuid() {

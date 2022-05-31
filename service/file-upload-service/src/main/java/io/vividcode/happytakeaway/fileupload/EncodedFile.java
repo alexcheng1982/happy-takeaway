@@ -13,8 +13,8 @@ public class EncodedFile {
   private String contentType;
 
   public String encode() {
-    return Base64.getEncoder().encodeToString((this.filePath + "#" + this.contentType).getBytes(
-        StandardCharsets.UTF_8));
+    return Base64.getEncoder()
+        .encodeToString((this.filePath + "#" + this.contentType).getBytes(StandardCharsets.UTF_8));
   }
 
   public static EncodedFile decode(String path) {

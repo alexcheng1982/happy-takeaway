@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 
 public class ServiceHelper {
 
-  private ServiceHelper() {
-  }
+  private ServiceHelper() {}
 
   public static ResourceNotFoundException restaurantNotFound(String id) {
     return new ResourceNotFoundException("Restaurant", id);
@@ -27,8 +26,8 @@ public class ServiceHelper {
     return new ResourceNotFoundException("MenuItem", id);
   }
 
-  public static <IN, OUT> List<OUT> transform(List<IN> list,
-      Function<? super IN, ? extends OUT> transformer) {
+  public static <IN, OUT> List<OUT> transform(
+      List<IN> list, Function<? super IN, ? extends OUT> transformer) {
     return list.stream().map(transformer).collect(Collectors.toList());
   }
 
@@ -50,8 +49,8 @@ public class ServiceHelper {
         .build();
   }
 
-  public static MenuItem buildMenuItem(MenuItemEntity entity,
-      Function<MenuItemEntity, String> coverImageProvider) {
+  public static MenuItem buildMenuItem(
+      MenuItemEntity entity, Function<MenuItemEntity, String> coverImageProvider) {
     return MenuItem.builder()
         .id(entity.getId())
         .name(entity.getName())

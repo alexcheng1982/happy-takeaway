@@ -25,29 +25,27 @@ class GeoLocationSearchServiceTest {
 
   private static final Faker faker = Faker.instance();
 
-  @Inject
-  GeoLocationSearchService geoLocationSearchService;
+  @Inject GeoLocationSearchService geoLocationSearchService;
 
-  @Inject
-  DataUpdateService dataUpdateService;
+  @Inject DataUpdateService dataUpdateService;
 
   @Test
   @DisplayName("search")
   void search() {
     double centerLng = 0.0;
     double centerLat = 0.0;
-    List<Restaurant> restaurants = IntStream.range(1, 4)
-        .mapToObj(
-            index -> this
-                .createRestaurant(index, centerLng, centerLat))
-        .collect(Collectors.toList());
+    List<Restaurant> restaurants =
+        IntStream.range(1, 4)
+            .mapToObj(index -> this.createRestaurant(index, centerLng, centerLat))
+            .collect(Collectors.toList());
     this.dataUpdateService.updateData(restaurants);
-    GeoLocationSearchResponse response = this.geoLocationSearchService
-        .search(GeoLocationSearchRequest.builder()
-            .lng(centerLng)
-            .lat(centerLat)
-            .radius(30_000)
-            .build());
+    GeoLocationSearchResponse response =
+        this.geoLocationSearchService.search(
+            GeoLocationSearchRequest.builder()
+                .lng(centerLng)
+                .lat(centerLat)
+                .radius(30_000)
+                .build());
     assertThat(response.getData()).asList().hasSize(3);
   }
 
@@ -55,11 +53,13 @@ class GeoLocationSearchServiceTest {
     return Restaurant.builder()
         .id(UUID.randomUUID().toString())
         .name("restaurant " + index)
-        .address(Address.builder()
-            .code(faker.number().digits(10))
-            .addressLine(faker.address().fullAddress())
-            .lng(lng + faker.random().nextInt(-10, 10) * 0.00001)
-            .lat(lat + faker.random().nextInt(-10, 10) * 0.00001)
-            .build()).build();
+        .address(
+            Address.builder()
+                .code(faker.number().digits(10))
+                .addressLine(faker.address().fullAddress())
+                .lng(lng + faker.random().nextInt(-10, 10) * 0.00001)
+                .lat(lat + faker.random().nextInt(-10, 10) * 0.00001)
+                .build())
+        .build();
   }
 }

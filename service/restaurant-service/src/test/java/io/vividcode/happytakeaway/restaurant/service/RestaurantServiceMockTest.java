@@ -25,20 +25,19 @@ import org.mockito.Mockito;
 @DisplayName("restaurant service")
 public class RestaurantServiceMockTest {
 
-  @InjectMock
-  RestaurantRepository restaurantRepository;
+  @InjectMock RestaurantRepository restaurantRepository;
 
-  @Inject
-  RestaurantService restaurantService;
+  @Inject RestaurantService restaurantService;
 
   @Test
   @DisplayName("list restaurants")
   void listRestaurants() {
     PanacheQuery<RestaurantEntity> listQuery = Mockito.mock(PanacheQuery.class);
-    Mockito.when(listQuery.list()).thenReturn(
-        IntStream.range(0, 10)
-            .mapToObj(index -> TestHelper.createRestaurantEntity())
-            .collect(Collectors.toList()));
+    Mockito.when(listQuery.list())
+        .thenReturn(
+            IntStream.range(0, 10)
+                .mapToObj(index -> TestHelper.createRestaurantEntity())
+                .collect(Collectors.toList()));
     PanacheQuery<RestaurantEntity> allQuery = Mockito.mock(PanacheQuery.class);
     Mockito.when(allQuery.page(0, 10)).thenReturn(listQuery);
     Mockito.when(this.restaurantRepository.findAll()).thenReturn(allQuery);

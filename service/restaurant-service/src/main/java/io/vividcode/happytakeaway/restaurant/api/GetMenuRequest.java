@@ -9,10 +9,7 @@ import lombok.NonNull;
 @Builder
 public class GetMenuRequest {
 
-  @NonNull
-  private String restaurantId;
-  @NonNull
-  private String menuId;
-  @NonNull
-  private PageRequest pageRequest;
+  @NonNull private String restaurantId;
+  @NonNull private String menuId;
+  @NonNull private PageRequest pageRequest;
 }

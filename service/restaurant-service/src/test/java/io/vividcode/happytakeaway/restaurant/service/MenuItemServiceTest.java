@@ -15,44 +15,45 @@ import org.junit.jupiter.api.Test;
 @DisplayName("menu item service")
 class MenuItemServiceTest {
 
-  @Inject
-  RestaurantService restaurantService;
+  @Inject RestaurantService restaurantService;
 
-  @Inject
-  MenuItemService menuItemService;
+  @Inject MenuItemService menuItemService;
 
   @Test
   @DisplayName("create menu item")
   void createMenuItem() {
-    String restaurantId = this.restaurantService
-        .createRestaurant(TestHelper.createRestaurantRequest());
-    String id = this.menuItemService
-        .createMenuItem(TestHelper.createMenuItemRequest(restaurantId));
+    String restaurantId =
+        this.restaurantService.createRestaurant(TestHelper.createRestaurantRequest());
+    String id = this.menuItemService.createMenuItem(TestHelper.createMenuItemRequest(restaurantId));
     assertThat(id).isNotNull();
   }
 
   @Test
   @DisplayName("update menu item")
   void updateMenuItem() {
-    String restaurantId = this.restaurantService
-        .createRestaurant(TestHelper.createRestaurantRequest());
-    String menuItemId = this.menuItemService
-        .createMenuItem(TestHelper.createMenuItemRequest(restaurantId));
+    String restaurantId =
+        this.restaurantService.createRestaurant(TestHelper.createRestaurantRequest());
+    String menuItemId =
+        this.menuItemService.createMenuItem(TestHelper.createMenuItemRequest(restaurantId));
     String newName = "new";
-    UpdateMenuItemResponse response = this.menuItemService
-        .updateMenuItem(TestHelper.updateMenuItemRequest(restaurantId, menuItemId, newName));
+    UpdateMenuItemResponse response =
+        this.menuItemService.updateMenuItem(
+            TestHelper.updateMenuItemRequest(restaurantId, menuItemId, newName));
     assertThat(response.getName()).isEqualTo(newName);
   }
 
   @Test
   @DisplayName("delete menu item")
   void deleteMenuItem() {
-    String restaurantId = this.restaurantService
-        .createRestaurant(TestHelper.createRestaurantRequest());
-    String menuItemId = this.menuItemService
-        .createMenuItem(TestHelper.createMenuItemRequest(restaurantId));
+    String restaurantId =
+        this.restaurantService.createRestaurant(TestHelper.createRestaurantRequest());
+    String menuItemId =
+        this.menuItemService.createMenuItem(TestHelper.createMenuItemRequest(restaurantId));
     this.menuItemService.deleteMenuItem(TestHelper.deleteMenuItemRequest(restaurantId, menuItemId));
-    assertThrows(ResourceNotFoundException.class, () -> this.menuItemService
-        .getMenuItem(TestHelper.getMenuItemRequest(restaurantId, menuItemId)));
+    assertThrows(
+        ResourceNotFoundException.class,
+        () ->
+            this.menuItemService.getMenuItem(
+                TestHelper.getMenuItemRequest(restaurantId, menuItemId)));
   }
 }

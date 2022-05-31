@@ -33,9 +33,7 @@ public class DeliveryTaskEventConsumer extends BaseEventConsumer {
 
   void onStart(@Observes StartupEvent e) {
     this.addEventHandler(
-        DeliveryTaskCreatedEvent.TYPE,
-        DeliveryTaskCreatedEvent.class,
-        this::onDeliveryTaskCreated);
+        DeliveryTaskCreatedEvent.TYPE, DeliveryTaskCreatedEvent.class, this::onDeliveryTaskCreated);
     this.start();
   }
 

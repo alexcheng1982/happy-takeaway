@@ -10,13 +10,11 @@ import lombok.NonNull;
 @Builder
 public class FullTextSearchRequest {
 
-  @NonNull
-  private String query;
+  @NonNull private String query;
 
   private BigDecimal minPrice;
 
   private BigDecimal maxPrice;
 
-  @NonNull
-  private PageRequest pageRequest;
+  @NonNull private PageRequest pageRequest;
 }

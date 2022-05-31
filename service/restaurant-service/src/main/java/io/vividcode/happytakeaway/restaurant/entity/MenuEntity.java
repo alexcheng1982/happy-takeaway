@@ -36,9 +36,9 @@ public class MenuEntity extends TimestampedBaseEntity {
   private RestaurantEntity restaurant;
 
   @ManyToMany
-  @JoinTable(name = "menu_item_association",
+  @JoinTable(
+      name = "menu_item_association",
       joinColumns = @JoinColumn(name = "menu_id"),
-      inverseJoinColumns = @JoinColumn(name = "menu_item_id")
-  )
+      inverseJoinColumns = @JoinColumn(name = "menu_item_id"))
   private List<MenuItemEntity> items;
 }

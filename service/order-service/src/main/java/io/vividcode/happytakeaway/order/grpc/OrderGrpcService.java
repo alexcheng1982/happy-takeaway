@@ -21,15 +21,13 @@ import javax.inject.Inject;
 @GrpcService
 public class OrderGrpcService extends OrderServiceImplBase {
 
-  @Inject
-  OrderService orderService;
+  @Inject OrderService orderService;
 
   @Override
   @Blocking
-  public void createOrder(CreateOrderRequest request,
-      StreamObserver<CreateOrderResponse> responseObserver) {
-    StreamObserverHelper
-        .sendSingleValue(responseObserver, request, this.orderService::createOrder);
+  public void createOrder(
+      CreateOrderRequest request, StreamObserver<CreateOrderResponse> responseObserver) {
+    StreamObserverHelper.sendSingleValue(responseObserver, request, this.orderService::createOrder);
   }
 
   @Override
@@ -41,25 +39,25 @@ public class OrderGrpcService extends OrderServiceImplBase {
 
   @Override
   @Blocking
-  public void findOrders(FindOrdersRequest request,
-      StreamObserver<FindOrdersResponse> responseObserver) {
-    StreamObserverHelper
-        .sendSingleValue(responseObserver, request, this.orderService::findOrders);
+  public void findOrders(
+      FindOrdersRequest request, StreamObserver<FindOrdersResponse> responseObserver) {
+    StreamObserverHelper.sendSingleValue(responseObserver, request, this.orderService::findOrders);
   }
 
   @Override
   @Blocking
-  public void confirmOrder(ConfirmOrderRequest request,
-      StreamObserver<ConfirmOrderResponse> responseObserver) {
-    StreamObserverHelper
-        .sendSingleValue(responseObserver, request, this.orderService::confirmOrder);
+  public void confirmOrder(
+      ConfirmOrderRequest request, StreamObserver<ConfirmOrderResponse> responseObserver) {
+    StreamObserverHelper.sendSingleValue(
+        responseObserver, request, this.orderService::confirmOrder);
   }
 
   @Override
   @Blocking
-  public void markAsReadyForDelivery(MarkAsReadyForDeliveryRequest request,
+  public void markAsReadyForDelivery(
+      MarkAsReadyForDeliveryRequest request,
       StreamObserver<MarkAsReadyForDeliveryResponse> responseObserver) {
-    StreamObserverHelper
-        .sendSingleValue(responseObserver, request, this.orderService::markAsReadyForDelivery);
+    StreamObserverHelper.sendSingleValue(
+        responseObserver, request, this.orderService::markAsReadyForDelivery);
   }
 }

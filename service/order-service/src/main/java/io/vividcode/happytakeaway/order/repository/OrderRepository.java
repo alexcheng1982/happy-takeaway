@@ -5,6 +5,4 @@ import io.vividcode.happytakeaway.order.entity.OrderEntity;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class OrderRepository implements PanacheRepositoryBase<OrderEntity, String> {
-
-}
+public class OrderRepository implements PanacheRepositoryBase<OrderEntity, String> {}

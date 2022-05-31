@@ -27,28 +27,30 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/{restaurantId}/menuitem")
 public class MenuItemResource {
 
-  @Inject
-  MenuItemService menuItemService;
+  @Inject MenuItemService menuItemService;
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Tag(ref = "menuItem")
   public Response create(
       @PathParam("restaurantId") String restaurantId,
-      @RequestBody(content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CreateMenuItemWebRequest.class)
-      ))
-          CreateMenuItemWebRequest request, @Context UriInfo uriInfo) {
-    String id = this.menuItemService.createMenuItem(CreateMenuItemRequest.builder()
-        .restaurantId(restaurantId)
-        .name(request.getName())
-        .coverImage(request.getCoverImage())
-        .description(request.getDescription())
-        .price(request.getPrice())
-        .build());
-    return Response.created(uriInfo.getAbsolutePathBuilder().path(id).build())
-        .build();
+      @RequestBody(
+              content =
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = CreateMenuItemWebRequest.class)))
+          CreateMenuItemWebRequest request,
+      @Context UriInfo uriInfo) {
+    String id =
+        this.menuItemService.createMenuItem(
+            CreateMenuItemRequest.builder()
+                .restaurantId(restaurantId)
+                .name(request.getName())
+                .coverImage(request.getCoverImage())
+                .description(request.getDescription())
+                .price(request.getPrice())
+                .build());
+    return Response.created(uriInfo.getAbsolutePathBuilder().path(id).build()).build();
   }
 
   @Path("{menuItemId}")
@@ -58,19 +60,21 @@ public class MenuItemResource {
   public UpdateMenuItemWebResponse update(
       @PathParam("restaurantId") String restaurantId,
       @PathParam("menuItemId") String menuItemId,
-      @RequestBody(content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UpdateMenuItemWebRequest.class)
-      ))
+      @RequestBody(
+              content =
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = UpdateMenuItemWebRequest.class)))
           UpdateMenuItemWebRequest request) {
-    UpdateMenuItemResponse response = this.menuItemService
-        .updateMenuItem(UpdateMenuItemRequest.builder()
-            .restaurantId(restaurantId)
-            .id(menuItemId)
-            .name(request.getName())
-            .description(request.getDescription())
-            .price(request.getPrice())
-            .build());
+    UpdateMenuItemResponse response =
+        this.menuItemService.updateMenuItem(
+            UpdateMenuItemRequest.builder()
+                .restaurantId(restaurantId)
+                .id(menuItemId)
+                .name(request.getName())
+                .description(request.getDescription())
+                .price(request.getPrice())
+                .build());
     return UpdateMenuItemWebResponse.builder()
         .id(response.getId())
         .name(response.getName())
@@ -84,12 +88,9 @@ public class MenuItemResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Tag(ref = "menuItem")
   public Response delete(
-      @PathParam("restaurantId") String restaurantId,
-      @PathParam("menuItemId") String menuItemId) {
-    this.menuItemService.deleteMenuItem(DeleteMenuItemRequest.builder()
-        .restaurantId(restaurantId)
-        .id(menuItemId)
-        .build());
+      @PathParam("restaurantId") String restaurantId, @PathParam("menuItemId") String menuItemId) {
+    this.menuItemService.deleteMenuItem(
+        DeleteMenuItemRequest.builder().restaurantId(restaurantId).id(menuItemId).build());
     return Response.noContent().build();
   }
 }

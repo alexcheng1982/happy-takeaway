@@ -23,8 +23,7 @@ import org.hibernate.search.mapper.orm.session.SearchSession;
 @ApplicationScoped
 public class FullTextSearchService {
 
-  @Inject
-  SearchSession searchSession;
+  @Inject SearchSession searchSession;
 
   public FullTextSearchResponse search(FullTextSearchRequest request) {
     PageRequest pageRequest = request.getPageRequest();
@@ -34,22 +33,23 @@ public class FullTextSearchService {
             .where(factory -> this.buildQuery(request, factory))
             .sort(SearchSortFactory::score);
     long count = query.fetchTotalHitCount();
-    List<MenuItemEntity> menuItems = query
-        .fetchHits(pageRequest.getOffset(), pageRequest.getSize());
-    List<Restaurant> restaurants = menuItems.stream()
-        .map(MenuItemEntity::getRestaurant)
-        .distinct()
-        .map(ServiceHelper::buildRestaurant)
-        .collect(Collectors.toList());
+    List<MenuItemEntity> menuItems =
+        query.fetchHits(pageRequest.getOffset(), pageRequest.getSize());
+    List<Restaurant> restaurants =
+        menuItems.stream()
+            .map(MenuItemEntity::getRestaurant)
+            .distinct()
+            .map(ServiceHelper::buildRestaurant)
+            .collect(Collectors.toList());
     return FullTextSearchResponse.builder()
         .result(PagedResult.fromData(restaurants, pageRequest, count))
         .build();
   }
 
-  private PredicateFinalStep buildQuery(FullTextSearchRequest request,
-      SearchPredicateFactory factory) {
-    MatchPredicateOptionsStep<?> query = factory.match().fields("name", "description")
-        .matching(request.getQuery());
+  private PredicateFinalStep buildQuery(
+      FullTextSearchRequest request, SearchPredicateFactory factory) {
+    MatchPredicateOptionsStep<?> query =
+        factory.match().fields("name", "description").matching(request.getQuery());
     RangePredicateOptionsStep<?> price = null;
     RangePredicateFieldMoreStep<?, ?> fieldMoreStep = factory.range().fields("price");
     if (request.getMinPrice() != null && request.getMaxPrice() != null) {

@@ -10,8 +10,7 @@ public class InvalidOrderStatusException extends RuntimeException implements Grp
   private final OrderStatus requiredStatus;
   private final OrderStatus actualStatus;
 
-  public InvalidOrderStatusException(
-      OrderStatus requiredStatus, OrderStatus actualStatus) {
+  public InvalidOrderStatusException(OrderStatus requiredStatus, OrderStatus actualStatus) {
     this.requiredStatus = requiredStatus;
     this.actualStatus = actualStatus;
   }
@@ -23,7 +22,8 @@ public class InvalidOrderStatusException extends RuntimeException implements Grp
 
   @Override
   public String getMessage() {
-    return String.format("Invalid order status, required status = %s, actual status = %s",
+    return String.format(
+        "Invalid order status, required status = %s, actual status = %s",
         this.requiredStatus, this.actualStatus);
   }
 

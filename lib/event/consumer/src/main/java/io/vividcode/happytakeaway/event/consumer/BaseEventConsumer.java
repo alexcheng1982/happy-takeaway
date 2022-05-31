@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.Data;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -35,8 +34,7 @@ public abstract class BaseEventConsumer {
   @Identifier("default-kafka-broker")
   Map<String, Object> config;
 
-  @Inject
-  DuplicateMessageDetector duplicateMessageDetector;
+  @Inject DuplicateMessageDetector duplicateMessageDetector;
 
   private final AtomicBoolean stopFlag = new AtomicBoolean();
   private final Map<String, EventHandler> eventHandlers = new HashMap<>();
@@ -46,12 +44,10 @@ public abstract class BaseEventConsumer {
   protected abstract List<String> getTopics();
 
   @SuppressWarnings("unchecked")
-  protected <T> void addEventHandler(String eventType, Class<T> eventClass,
-      Consumer<T> consumer) {
-    this.eventHandlers.put(eventType, EventHandler.builder()
-        .type(eventClass)
-        .handler((Consumer<Object>) consumer)
-        .build());
+  protected <T> void addEventHandler(String eventType, Class<T> eventClass, Consumer<T> consumer) {
+    this.eventHandlers.put(
+        eventType,
+        EventHandler.builder().type(eventClass).handler((Consumer<Object>) consumer).build());
   }
 
   protected void start() {
@@ -64,8 +60,8 @@ public abstract class BaseEventConsumer {
   private void pollRecords() {
     String consumerId = this.getConsumerId();
     Map<String, Object> conf = new HashMap<>(this.config);
-    KafkaConsumer<String, String> consumer = new KafkaConsumer<>(conf, new StringDeserializer(),
-        new StringDeserializer());
+    KafkaConsumer<String, String> consumer =
+        new KafkaConsumer<>(conf, new StringDeserializer(), new StringDeserializer());
     consumer.subscribe(this.getTopics());
     LOG.infov("Subscribed to topics {0}", this.getTopics());
     while (!this.stopFlag.get()) {
@@ -84,8 +80,7 @@ public abstract class BaseEventConsumer {
       return;
     }
     if (this.duplicateMessageDetector.isDuplicate(consumerId, eventId)) {
-      LOG.infov("Duplicate message: consumerId = {0}, messageId = {1}", consumerId,
-          eventId);
+      LOG.infov("Duplicate message: consumerId = {0}, messageId = {1}", consumerId, eventId);
       return;
     }
     String eventType = this.getHeader(headers, HEADER_TYPE);
@@ -94,12 +89,11 @@ public abstract class BaseEventConsumer {
       return;
     }
     String timestampHeader = this.getHeader(headers, HEADER_TIMESTAMP);
-    long timestamp = timestampHeader != null ? Long.parseLong(timestampHeader)
-        : System.currentTimeMillis();
+    long timestamp =
+        timestampHeader != null ? Long.parseLong(timestampHeader) : System.currentTimeMillis();
     EventHandler eventHandler = this.eventHandlers.get(eventType);
     if (eventHandler != null) {
-      Object event = this
-          .createEvent(eventHandler.type, eventId, timestamp, record.value());
+      Object event = this.createEvent(eventHandler.type, eventId, timestamp, record.value());
       eventHandler.handler.accept(event);
     } else {
       LOG.infov("Ignore event {0} of type {1} without handlers", eventId, eventType);
@@ -111,14 +105,14 @@ public abstract class BaseEventConsumer {
     return header != null ? new String(header.value(), StandardCharsets.UTF_8) : null;
   }
 
-  private Object createEvent(Class<?> eventClass, String eventId, long timestamp,
-      String payload) {
+  private Object createEvent(Class<?> eventClass, String eventId, long timestamp, String payload) {
     try {
-      Class<?> payloadClass = (Class<?>) ((ParameterizedType) eventClass
-          .getGenericSuperclass()).getActualTypeArguments()[0];
+      Class<?> payloadClass =
+          (Class<?>)
+              ((ParameterizedType) eventClass.getGenericSuperclass()).getActualTypeArguments()[0];
       Object payloadObj = JsonMapper.fromJson(payload, payloadClass);
-      Constructor<?> constructor = eventClass
-          .getConstructor(String.class, long.class, payloadClass);
+      Constructor<?> constructor =
+          eventClass.getConstructor(String.class, long.class, payloadClass);
       return constructor.newInstance(eventId, timestamp, payloadObj);
     } catch (Exception e) {
       LOG.warn("Failed to create event", e);

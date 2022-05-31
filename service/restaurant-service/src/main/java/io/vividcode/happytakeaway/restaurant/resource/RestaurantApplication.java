@@ -9,22 +9,19 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @OpenAPIDefinition(
     tags = {
-        @Tag(name = "restaurant", description = "Restaurant"),
-        @Tag(name = "menu", description = "Menu"),
-        @Tag(name = "menuItem", description = "Menu item"),
-        @Tag(name = "order", description = "Order")
+      @Tag(name = "restaurant", description = "Restaurant"),
+      @Tag(name = "menu", description = "Menu"),
+      @Tag(name = "menuItem", description = "Menu item"),
+      @Tag(name = "order", description = "Order")
     },
-    info = @Info(
-        title = "Restaurant Service API",
-        version = "1.0.0",
-        contact = @Contact(
-            name = "Support",
-            url = "http://example.com/contact",
-            email = "support@example.com"),
-        license = @License(
-            name = "MIT License",
-            url = "https://opensource.org/licenses/MIT"))
-)
-public class RestaurantApplication extends Application {
-
-}
+    info =
+        @Info(
+            title = "Restaurant Service API",
+            version = "1.0.0",
+            contact =
+                @Contact(
+                    name = "Support",
+                    url = "http://example.com/contact",
+                    email = "support@example.com"),
+            license = @License(name = "MIT License", url = "https://opensource.org/licenses/MIT")))
+public class RestaurantApplication extends Application {}

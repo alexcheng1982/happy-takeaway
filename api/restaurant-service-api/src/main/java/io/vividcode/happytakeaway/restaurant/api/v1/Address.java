@@ -16,12 +16,15 @@ public class Address {
   @NonNull
   @Schema(required = true)
   private String code;
+
   @NonNull
   @Schema(required = true)
   private String addressLine;
+
   @NonNull
   @Schema(required = true)
   private Double lng;
+
   @NonNull
   @Schema(required = true)
   private Double lat;

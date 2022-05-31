@@ -12,8 +12,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/")
 public class GeoLocationSearchResource {
 
-  @Inject
-  GeoLocationSearchService searchService;
+  @Inject GeoLocationSearchService searchService;
 
   @Path("search")
   @POST

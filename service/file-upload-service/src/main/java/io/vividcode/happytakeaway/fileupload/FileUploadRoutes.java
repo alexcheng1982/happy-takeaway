@@ -13,14 +13,12 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class FileUploadRoutes {
 
-  @Route(path = "/upload", methods = HttpMethod.POST, produces = "application/json",
-      order = 10)
+  @Route(path = "/upload", methods = HttpMethod.POST, produces = "application/json", order = 10)
   UploadResult upload(RoutingContext context) {
     return new UploadResult(
-        context.fileUploads().stream().map(
-            fileUpload -> new UploadedFile(this.encodeFilePath(fileUpload))
-        ).toArray(UploadedFile[]::new)
-    );
+        context.fileUploads().stream()
+            .map(fileUpload -> new UploadedFile(this.encodeFilePath(fileUpload)))
+            .toArray(UploadedFile[]::new));
   }
 
   @Route(path = "/file/:id", methods = HttpMethod.GET, order = 1)
@@ -30,7 +28,8 @@ public class FileUploadRoutes {
       throw new InvalidFileIdException();
     }
     EncodedFile encodedFile = EncodedFile.decode(fileId);
-    context.response()
+    context
+        .response()
         .putHeader(HttpHeaders.CONTENT_TYPE, encodedFile.getContentType())
         .sendFile(encodedFile.getFilePath());
   }

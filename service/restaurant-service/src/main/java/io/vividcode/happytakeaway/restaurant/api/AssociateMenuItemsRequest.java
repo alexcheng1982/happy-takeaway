@@ -9,10 +9,7 @@ import lombok.NonNull;
 @Builder
 public class AssociateMenuItemsRequest {
 
-  @NonNull
-  private String restaurantId;
-  @NonNull
-  private String menuId;
-  @NonNull
-  private Set<String> menuItems;
+  @NonNull private String restaurantId;
+  @NonNull private String menuId;
+  @NonNull private Set<String> menuItems;
 }

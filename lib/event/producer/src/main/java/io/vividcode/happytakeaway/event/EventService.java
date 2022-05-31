@@ -11,20 +11,19 @@ import javax.transaction.Transactional.TxType;
 @ApplicationScoped
 public class EventService {
 
-  @Inject
-  EventRepository eventRepository;
+  @Inject EventRepository eventRepository;
 
   @Transactional(TxType.MANDATORY)
-  public <A extends AggregateEntity, E extends DomainEvent<?>> void publish(A aggregate,
-      E event) {
-    EventEntity entity = EventEntity.builder()
-        .id(event.getEventId())
-        .type(event.getEventType())
-        .timestamp(event.getTimestamp())
-        .aggregateType(aggregate.aggregateType())
-        .aggregateId(aggregate.aggregateId())
-        .payload(this.convertEventPayload(event.getPayload()))
-        .build();
+  public <A extends AggregateEntity, E extends DomainEvent<?>> void publish(A aggregate, E event) {
+    EventEntity entity =
+        EventEntity.builder()
+            .id(event.getEventId())
+            .type(event.getEventType())
+            .timestamp(event.getTimestamp())
+            .aggregateType(aggregate.aggregateType())
+            .aggregateId(aggregate.aggregateId())
+            .payload(this.convertEventPayload(event.getPayload()))
+            .build();
     this.eventRepository.persist(entity);
   }
 

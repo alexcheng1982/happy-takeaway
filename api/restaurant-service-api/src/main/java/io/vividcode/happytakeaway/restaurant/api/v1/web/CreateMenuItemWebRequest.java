@@ -13,10 +13,8 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class CreateMenuItemWebRequest {
 
-  @NonNull
-  private String name;
+  @NonNull private String name;
   private String coverImage;
   private String description;
-  @NonNull
-  private BigDecimal price;
+  @NonNull private BigDecimal price;
 }

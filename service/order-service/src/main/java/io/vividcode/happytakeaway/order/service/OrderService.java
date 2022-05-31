@@ -43,29 +43,26 @@ import javax.transaction.Transactional;
 @ApplicationScoped
 public class OrderService {
 
-  @Inject
-  OrderRepository orderRepository;
+  @Inject OrderRepository orderRepository;
 
-  @Inject
-  EntityManager entityManager;
+  @Inject EntityManager entityManager;
 
-  @Inject
-  EventService eventService;
+  @Inject EventService eventService;
 
   @Transactional
   @Timed(
       value = "order.created",
       extraTags = {"entity", "order"},
       description = "Created orders",
-      histogram = true
-  )
+      histogram = true)
   public CreateOrderResponse createOrder(CreateOrderRequest request) {
-    OrderEntity order = OrderEntity.builder()
-        .userId(request.getUserId())
-        .restaurantId(request.getRestaurantId())
-        .status(OrderStatus.CREATED)
-        .lineItems(this.buildLineItems(request))
-        .build();
+    OrderEntity order =
+        OrderEntity.builder()
+            .userId(request.getUserId())
+            .restaurantId(request.getRestaurantId())
+            .status(OrderStatus.CREATED)
+            .lineItems(this.buildLineItems(request))
+            .build();
     this.orderRepository.persist(order);
     this.eventService.publish(order, this.orderCreatedEvent(order));
     return CreateOrderResponse.newBuilder().setOrderId(order.getId()).build();
@@ -73,25 +70,33 @@ public class OrderService {
 
   @Transactional
   public GetOrderResponse getOrder(GetOrderRequest request) {
-    return this.orderRepository.findByIdOptional(request.getOrderId())
-        .map(order -> GetOrderResponse.newBuilder()
-            .setOrderId(order.getId())
-            .setRestaurantId(order.getRestaurantId())
-            .setUserId(order.getUserId())
-            .addAllItems(this.decodeOrderItems(order))
-            .build())
+    return this.orderRepository
+        .findByIdOptional(request.getOrderId())
+        .map(
+            order ->
+                GetOrderResponse.newBuilder()
+                    .setOrderId(order.getId())
+                    .setRestaurantId(order.getRestaurantId())
+                    .setUserId(order.getUserId())
+                    .addAllItems(this.decodeOrderItems(order))
+                    .build())
         .orElseThrow(() -> ServiceHelper.orderNotFound(request.getOrderId()));
   }
 
   @Transactional
   public ConfirmOrderResponse confirmOrder(ConfirmOrderRequest request) {
     String orderId = request.getOrderId();
-    boolean result = this.orderRepository.findByIdOptional(orderId).map(order -> {
-      order.setStatus(OrderStatus.CONFIRMED);
-      this.orderRepository.persist(order);
-      this.eventService.publish(order, this.orderConfirmedEvent(orderId));
-      return true;
-    }).orElse(false);
+    boolean result =
+        this.orderRepository
+            .findByIdOptional(orderId)
+            .map(
+                order -> {
+                  order.setStatus(OrderStatus.CONFIRMED);
+                  this.orderRepository.persist(order);
+                  this.eventService.publish(order, this.orderConfirmedEvent(orderId));
+                  return true;
+                })
+            .orElse(false);
     return ConfirmOrderResponse.newBuilder().setOrderId(orderId).setResult(result).build();
   }
 
@@ -99,42 +104,56 @@ public class OrderService {
   public MarkAsReadyForDeliveryResponse markAsReadyForDelivery(
       MarkAsReadyForDeliveryRequest request) {
     String orderId = request.getOrderId();
-    boolean result = this.orderRepository.findByIdOptional(orderId).map(order -> {
-      if (order.getStatus() != OrderStatus.CONFIRMED) {
-        throw new InvalidOrderStatusException(OrderStatus.CONFIRMED, order.getStatus());
-      }
-      order.setStatus(OrderStatus.READY_FOR_DELIVERY);
-      this.orderRepository.persist(order);
-      DeliveryTask deliveryTask = DeliveryTask.builder()
-          .id(UUID.randomUUID().toString())
-          .orderId(order.getId())
-          .restaurantId(order.getRestaurantId())
-          .userId(order.getUserId())
-          .restaurantAddress(Address.builder()
-              .lng(request.getPickupAddress().getLng())
-              .lat(request.getPickupAddress().getLat())
-              .build())
-          .build();
-      this.eventService.publish(deliveryTask, this.deliveryTaskCreatedEvent(deliveryTask));
-      return true;
-    }).orElse(false);
-    return MarkAsReadyForDeliveryResponse.newBuilder().setOrderId(orderId).setResult(result)
+    boolean result =
+        this.orderRepository
+            .findByIdOptional(orderId)
+            .map(
+                order -> {
+                  if (order.getStatus() != OrderStatus.CONFIRMED) {
+                    throw new InvalidOrderStatusException(OrderStatus.CONFIRMED, order.getStatus());
+                  }
+                  order.setStatus(OrderStatus.READY_FOR_DELIVERY);
+                  this.orderRepository.persist(order);
+                  DeliveryTask deliveryTask =
+                      DeliveryTask.builder()
+                          .id(UUID.randomUUID().toString())
+                          .orderId(order.getId())
+                          .restaurantId(order.getRestaurantId())
+                          .userId(order.getUserId())
+                          .restaurantAddress(
+                              Address.builder()
+                                  .lng(request.getPickupAddress().getLng())
+                                  .lat(request.getPickupAddress().getLat())
+                                  .build())
+                          .build();
+                  this.eventService.publish(
+                      deliveryTask, this.deliveryTaskCreatedEvent(deliveryTask));
+                  return true;
+                })
+            .orElse(false);
+    return MarkAsReadyForDeliveryResponse.newBuilder()
+        .setOrderId(orderId)
+        .setResult(result)
         .build();
   }
 
   private OrderCreatedEvent orderCreatedEvent(OrderEntity order) {
-    return new OrderCreatedEvent(OrderDetails.builder()
-        .orderId(order.getId())
-        .userId(order.getUserId())
-        .restaurantId(order.getRestaurantId())
-        .items(order.getLineItems().stream()
-            .map(lineItem -> OrderDetails.OrderItem.builder()
-                .itemId(lineItem.getItemId())
-                .quantity(lineItem.getQuantity())
-                .price(lineItem.getPrice())
-                .build())
-            .collect(Collectors.toList()))
-        .build());
+    return new OrderCreatedEvent(
+        OrderDetails.builder()
+            .orderId(order.getId())
+            .userId(order.getUserId())
+            .restaurantId(order.getRestaurantId())
+            .items(
+                order.getLineItems().stream()
+                    .map(
+                        lineItem ->
+                            OrderDetails.OrderItem.builder()
+                                .itemId(lineItem.getItemId())
+                                .quantity(lineItem.getQuantity())
+                                .price(lineItem.getPrice())
+                                .build())
+                    .collect(Collectors.toList()))
+            .build());
   }
 
   private OrderConfirmedEvent orderConfirmedEvent(String orderId) {
@@ -158,30 +177,38 @@ public class OrderService {
     Root<OrderEntity> ordersRoot = ordersQuery.from(OrderEntity.class);
     this.updateQuery(ordersQuery, cb, ordersRoot, request);
     PageRequest pageRequest = request.getPageRequest();
-    List<Order> orders = this.entityManager.createQuery(ordersQuery)
-        .setFirstResult(pageRequest.getPage() * pageRequest.getSize())
-        .setMaxResults(pageRequest.getSize())
-        .getResultList()
-        .stream().map(order -> Order.newBuilder()
-            .setOrderId(order.getId())
-            .setUserId(order.getUserId())
-            .setRestaurantId(order.getRestaurantId())
-            .setStatus(order.getStatus().name())
-            .addAllItems(this.decodeOrderItems(order))
-            .build())
-        .collect(Collectors.toList());
+    List<Order> orders =
+        this.entityManager
+            .createQuery(ordersQuery)
+            .setFirstResult(pageRequest.getPage() * pageRequest.getSize())
+            .setMaxResults(pageRequest.getSize())
+            .getResultList()
+            .stream()
+            .map(
+                order ->
+                    Order.newBuilder()
+                        .setOrderId(order.getId())
+                        .setUserId(order.getUserId())
+                        .setRestaurantId(order.getRestaurantId())
+                        .setStatus(order.getStatus().name())
+                        .addAllItems(this.decodeOrderItems(order))
+                        .build())
+            .collect(Collectors.toList());
     int pageCount = (int) Math.ceil(count * 1.0 / pageRequest.getSize());
     return FindOrdersResponse.newBuilder()
-        .setResult(OrdersResult.newBuilder()
-            .setCurrentPage(pageRequest.getPage())
-            .setTotalPages(pageCount)
-            .setTotalItems(count)
-            .addAllOrders(orders)
-            .build())
+        .setResult(
+            OrdersResult.newBuilder()
+                .setCurrentPage(pageRequest.getPage())
+                .setTotalPages(pageCount)
+                .setTotalItems(count)
+                .addAllOrders(orders)
+                .build())
         .build();
   }
 
-  private <T> void updateQuery(CriteriaQuery<T> query, CriteriaBuilder cb,
+  private <T> void updateQuery(
+      CriteriaQuery<T> query,
+      CriteriaBuilder cb,
       Root<OrderEntity> root,
       FindOrdersRequest request) {
     List<Predicate> predicates = new ArrayList<>();
@@ -198,9 +225,7 @@ public class OrderService {
   }
 
   private List<LineItemEntity> buildLineItems(CreateOrderRequest request) {
-    return request.getItemsList().stream()
-        .map(this::buildOrderItem)
-        .collect(Collectors.toList());
+    return request.getItemsList().stream().map(this::buildOrderItem).collect(Collectors.toList());
   }
 
   private LineItemEntity buildOrderItem(OrderItem orderItem) {

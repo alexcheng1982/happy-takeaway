@@ -13,8 +13,7 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class OrderEventConsumer extends BaseEventConsumer {
 
-  @Inject
-  OrderEventsSocket orderEventsSocket;
+  @Inject OrderEventsSocket orderEventsSocket;
 
   @Override
   protected String getConsumerId() {
@@ -27,8 +26,7 @@ public class OrderEventConsumer extends BaseEventConsumer {
   }
 
   void onStart(@Observes StartupEvent e) {
-    this.addEventHandler(OrderCreatedEvent.TYPE,
-        OrderCreatedEvent.class, this::onOrderCreated);
+    this.addEventHandler(OrderCreatedEvent.TYPE, OrderCreatedEvent.class, this::onOrderCreated);
     this.start();
   }
 

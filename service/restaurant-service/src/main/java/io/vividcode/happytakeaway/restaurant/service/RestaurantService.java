@@ -29,27 +29,25 @@ import javax.transaction.Transactional;
 @ApplicationScoped
 public class RestaurantService {
 
-  @Inject
-  RestaurantRepository restaurantRepository;
+  @Inject RestaurantRepository restaurantRepository;
 
-  @Inject
-  MenuRepository menuRepository;
+  @Inject MenuRepository menuRepository;
 
-  @Inject
-  MenuItemService menuItemService;
+  @Inject MenuItemService menuItemService;
 
-  @Inject
-  OwnerIdProvider ownerIdProvider;
+  @Inject OwnerIdProvider ownerIdProvider;
 
   @Transactional
   public String createRestaurant(CreateRestaurantRequest request) {
-    RestaurantEntityBuilder builder = RestaurantEntity.builder()
-        .ownerId(this.ownerIdProvider.get())
-        .name(request.getName())
-        .description(request.getDescription())
-        .phoneNumber(request.getPhoneNumber());
+    RestaurantEntityBuilder builder =
+        RestaurantEntity.builder()
+            .ownerId(this.ownerIdProvider.get())
+            .name(request.getName())
+            .description(request.getDescription())
+            .phoneNumber(request.getPhoneNumber());
     if (request.getAddress() != null) {
-      builder.addressCode(request.getAddress().getCode())
+      builder
+          .addressCode(request.getAddress().getCode())
           .addressLine(request.getAddress().getAddressLine())
           .addressLng(request.getAddress().getLng())
           .addressLat(request.getAddress().getLat());
@@ -60,27 +58,31 @@ public class RestaurantService {
   }
 
   public RestaurantWithMenuItems getRestaurant(GetRestaurantRequest request) {
-    return this.restaurantRepository.findByOwnerIdAndId(this.ownerIdProvider.get(), request.getId())
-        .map(restaurant -> {
-          RestaurantWithMenuItemsBuilder builder = RestaurantWithMenuItems.builder()
-              .id(restaurant.getId())
-              .name(restaurant.getName())
-              .description(restaurant.getDescription())
-              .address(ServiceHelper.buildAddress(restaurant));
-          if (restaurant.getActiveMenu() != null && request.getNumberOfMenuItems() > 0) {
-            builder.menuItems(this.menuItemService
-                .findMenuItems(restaurant.getActiveMenu().getId(),
-                    PageRequest.of(0, request.getNumberOfMenuItems())));
-          }
-          return builder
-              .build();
-        })
+    return this.restaurantRepository
+        .findByOwnerIdAndId(this.ownerIdProvider.get(), request.getId())
+        .map(
+            restaurant -> {
+              RestaurantWithMenuItemsBuilder builder =
+                  RestaurantWithMenuItems.builder()
+                      .id(restaurant.getId())
+                      .name(restaurant.getName())
+                      .description(restaurant.getDescription())
+                      .address(ServiceHelper.buildAddress(restaurant));
+              if (restaurant.getActiveMenu() != null && request.getNumberOfMenuItems() > 0) {
+                builder.menuItems(
+                    this.menuItemService.findMenuItems(
+                        restaurant.getActiveMenu().getId(),
+                        PageRequest.of(0, request.getNumberOfMenuItems())));
+              }
+              return builder.build();
+            })
         .orElseThrow(() -> ServiceHelper.restaurantNotFound(request.getId()));
   }
 
   @Transactional
   public List<Restaurant> listAllRestaurants(PageRequest pageRequest) {
-    return this.restaurantRepository.findAll()
+    return this.restaurantRepository
+        .findAll()
         .page(pageRequest.getPage(), pageRequest.getSize())
         .list()
         .stream()
@@ -91,26 +93,33 @@ public class RestaurantService {
   @Transactional
   public PagedResult<Restaurant> listRestaurants(PageRequest pageRequest) {
     long count = this.restaurantRepository.count();
-    List<RestaurantEntity> entities = this.restaurantRepository.findAll(Sort.by("name"))
-        .page(pageRequest.getPage(), pageRequest.getSize())
-        .list();
+    List<RestaurantEntity> entities =
+        this.restaurantRepository
+            .findAll(Sort.by("name"))
+            .page(pageRequest.getPage(), pageRequest.getSize())
+            .list();
     List<Restaurant> results = ServiceHelper.transform(entities, ServiceHelper::buildRestaurant);
     return PagedResult.fromData(results, pageRequest, count);
   }
 
   @Transactional
   public PagedResult<MenuItem> getMenuItems(String restaurantId, PageRequest pageRequest) {
-    return this.restaurantRepository.findByOwnerIdAndId(this.ownerIdProvider.get(), restaurantId)
-        .map(restaurant -> Optional.ofNullable(restaurant.getActiveMenu()).map(
-            menu -> this.menuItemService.findMenuItems(menu.getId(), pageRequest)
-        ).orElse(PagedResult.empty()))
+    return this.restaurantRepository
+        .findByOwnerIdAndId(this.ownerIdProvider.get(), restaurantId)
+        .map(
+            restaurant ->
+                Optional.ofNullable(restaurant.getActiveMenu())
+                    .map(menu -> this.menuItemService.findMenuItems(menu.getId(), pageRequest))
+                    .orElse(PagedResult.empty()))
         .orElseThrow(() -> ServiceHelper.restaurantNotFound(restaurantId));
   }
 
   @Transactional
   public UpdateRestaurantResponse updateRestaurant(UpdateRestaurantRequest request) {
-    return this.restaurantRepository.findByOwnerIdAndId(this.ownerIdProvider.get(), request.getId())
-        .map(restaurant -> {
+    return this.restaurantRepository
+        .findByOwnerIdAndId(this.ownerIdProvider.get(), request.getId())
+        .map(
+            restaurant -> {
               if (request.getName() != null) {
                 restaurant.setName(request.getName());
               }
@@ -129,33 +138,36 @@ public class RestaurantService {
                   .id(restaurant.getId())
                   .name(restaurant.getName())
                   .description(restaurant.getDescription())
-                  .address(Address.builder()
-                      .code(restaurant.getAddressCode())
-                      .addressLine(restaurant.getAddressLine())
-                      .lng(restaurant.getAddressLng())
-                      .lat(restaurant.getAddressLat())
-                      .build())
+                  .address(
+                      Address.builder()
+                          .code(restaurant.getAddressCode())
+                          .addressLine(restaurant.getAddressLine())
+                          .lng(restaurant.getAddressLng())
+                          .lat(restaurant.getAddressLat())
+                          .build())
                   .build();
-            }
-        ).orElseThrow(() -> ServiceHelper.restaurantNotFound(request.getId()));
+            })
+        .orElseThrow(() -> ServiceHelper.restaurantNotFound(request.getId()));
   }
 
   @Transactional
   public boolean deleteRestaurant(DeleteRestaurantRequest request) {
-    return this.restaurantRepository
-        .deleteByOwnerIdAndId(this.ownerIdProvider.get(), request.getId());
+    return this.restaurantRepository.deleteByOwnerIdAndId(
+        this.ownerIdProvider.get(), request.getId());
   }
 
   @Transactional
   public SetActiveMenuResponse setActiveMenu(SetActiveMenuRequest request) {
     this.restaurantRepository
         .findByOwnerIdAndId(this.ownerIdProvider.get(), request.getRestaurantId())
-        .map(restaurant -> {
-          restaurant.setActiveMenu(
-              this.menuRepository.findById(request.getRestaurantId(), request.getMenuId())
-                  .orElseThrow(() -> ServiceHelper.menuNotFound(request.getMenuId())));
-          return restaurant;
-        })
+        .map(
+            restaurant -> {
+              restaurant.setActiveMenu(
+                  this.menuRepository
+                      .findById(request.getRestaurantId(), request.getMenuId())
+                      .orElseThrow(() -> ServiceHelper.menuNotFound(request.getMenuId())));
+              return restaurant;
+            })
         .orElseThrow(() -> ServiceHelper.restaurantNotFound(request.getRestaurantId()));
     return SetActiveMenuResponse.builder()
         .restaurantId(request.getRestaurantId())

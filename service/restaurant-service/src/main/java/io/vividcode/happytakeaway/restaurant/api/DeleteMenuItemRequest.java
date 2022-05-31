@@ -8,8 +8,6 @@ import lombok.NonNull;
 @Builder
 public class DeleteMenuItemRequest {
 
-  @NonNull
-  private String restaurantId;
-  @NonNull
-  private String id;
+  @NonNull private String restaurantId;
+  @NonNull private String id;
 }

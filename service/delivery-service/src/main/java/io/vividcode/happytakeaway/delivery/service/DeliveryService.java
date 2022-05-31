@@ -36,11 +36,9 @@ import org.jboss.logging.Logger;
 @ApplicationScoped
 public class DeliveryService {
 
-  @Inject
-  ReactiveRedisClient redisClient;
+  @Inject ReactiveRedisClient redisClient;
 
-  @Inject
-  DeliveryTaskRepository deliveryTaskRepository;
+  @Inject DeliveryTaskRepository deliveryTaskRepository;
 
   @Inject
   @Channel("delivery-rider-search")
@@ -55,133 +53,162 @@ public class DeliveryService {
 
   private static final String REDIS_CURRENT_POSITION = "delivery_";
 
-  private final ScheduledExecutorService scheduler = Executors
-      .newSingleThreadScheduledExecutor();
+  private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
   public Uni<DeliveryTaskInfo> getTask(String taskId) {
     return this.deliveryTaskRepository.getTask(taskId);
   }
 
   public Uni<DeliveryRiderSearch> taskCreated(DeliveryTask deliveryTask) {
-    return this.deliveryTaskRepository.createTask(deliveryTask.getId())
-        .map($void -> DeliveryRiderSearch.builder()
-            .deliveryTask(deliveryTask)
-            .tryCount(1)
-            .build());
+    return this.deliveryTaskRepository
+        .createTask(deliveryTask.getId())
+        .map($void -> DeliveryRiderSearch.builder().deliveryTask(deliveryTask).tryCount(1).build());
   }
 
   public Multi<DeliveryPickupInvitation> searchForRiders(DeliveryRiderSearch search) {
-    Uni<List<String>> existingRiders = this.deliveryTaskRepository
-        .getExistingRiders(search.getDeliveryTask().getId());
+    Uni<List<String>> existingRiders =
+        this.deliveryTaskRepository.getExistingRiders(search.getDeliveryTask().getId());
     Uni<List<String>> riders = this.search(search, existingRiders);
-    return riders.toMulti().flatMap(riderIds ->
-        Multi.createFrom().items(riderIds.stream())
-            .flatMap(riderId -> this.deliveryTaskRepository
-                .createPickupInvitation(search.getDeliveryTask().getId(), riderId)
-                .map($void -> DeliveryPickupInvitation.builder()
-                    .deliveryTask(search.getDeliveryTask())
-                    .riderId(riderId)
-                    .build())
-                .toMulti())
-    );
+    return riders
+        .toMulti()
+        .flatMap(
+            riderIds ->
+                Multi.createFrom()
+                    .items(riderIds.stream())
+                    .flatMap(
+                        riderId ->
+                            this.deliveryTaskRepository
+                                .createPickupInvitation(search.getDeliveryTask().getId(), riderId)
+                                .map(
+                                    $void ->
+                                        DeliveryPickupInvitation.builder()
+                                            .deliveryTask(search.getDeliveryTask())
+                                            .riderId(riderId)
+                                            .build())
+                                .toMulti()));
   }
 
   public Uni<Void> acceptDeliveryPickupInvitation(String taskId, String riderId) {
-    return this.deliveryTaskRepository
-        .updatePickupStatus(taskId, riderId, DeliveryPickupInvitationStatus.ACCEPTED);
+    return this.deliveryTaskRepository.updatePickupStatus(
+        taskId, riderId, DeliveryPickupInvitationStatus.ACCEPTED);
   }
 
   public void updateDeliveryTaskStatus(DeliveryTask deliveryTask, DeliveryTaskStatus status) {
-    this.deliveryTaskRepository.updateTaskStatus(deliveryTask.getId(), status).await()
+    this.deliveryTaskRepository
+        .updateTaskStatus(deliveryTask.getId(), status)
+        .await()
         .indefinitely();
   }
 
   public void selectRider(String taskId, String riderId) {
-    this.deliveryTaskRepository.selectRider(taskId, riderId).subscribe()
-        .with(($void) -> LOGGER.infov("Marked task {0} as selected by {1}", taskId, riderId),
+    this.deliveryTaskRepository
+        .selectRider(taskId, riderId)
+        .subscribe()
+        .with(
+            ($void) -> LOGGER.infov("Marked task {0} as selected by {1}", taskId, riderId),
             (e) -> LOGGER.warn("Failed to select rider", e));
   }
 
   public void checkForRidersAcceptance(DeliveryRiderSearch search) {
-    this.scheduleCheckDeliveryPickupInvitationTask(search.getDeliveryTask(),
+    this.scheduleCheckDeliveryPickupInvitationTask(
+        search.getDeliveryTask(),
         Duration.ofSeconds(this.checkInterval),
         search.getTryCount(),
         (task, riderId) -> this.selectRider(task.getId(), riderId),
         this::updateDeliveryTaskStatus);
   }
 
-  public void scheduleCheckDeliveryPickupInvitationTask(DeliveryTask deliveryTask,
+  public void scheduleCheckDeliveryPickupInvitationTask(
+      DeliveryTask deliveryTask,
       Duration interval,
-      int attempt, BiConsumer<DeliveryTask, String> successCallback,
+      int attempt,
+      BiConsumer<DeliveryTask, String> successCallback,
       BiConsumer<DeliveryTask, DeliveryTaskStatus> failureCallback) {
     this.scheduler.schedule(
-        new CheckDeliveryPickupAcceptanceTask(this, deliveryTask, attempt,
-            successCallback,
-            failureCallback),
+        new CheckDeliveryPickupAcceptanceTask(
+            this, deliveryTask, attempt, successCallback, failureCallback),
         interval.toMillis(),
         TimeUnit.MILLISECONDS);
   }
 
   public Uni<Optional<String>> selectRider(DeliveryTask deliveryTask) {
-    return this.deliveryTaskRepository.getAcceptedRiders(deliveryTask.getId())
+    return this.deliveryTaskRepository
+        .getAcceptedRiders(deliveryTask.getId())
         .flatMap(riders -> this.searchForSelect(deliveryTask, riders));
   }
 
   private Uni<Optional<String>> searchForSelect(DeliveryTask deliveryTask, List<String> riders) {
     String key = "search_" + deliveryTask.getId();
-    return Multi.createFrom().items(riders.stream())
-        .flatMap(riderId ->
-            this.getCurrentPosition(riderId).toMulti().flatMap(geoLocation -> {
-              List<String> args = new ArrayList<>(4);
-              args.add(key);
-              args.add(geoLocation.getLng());
-              args.add(geoLocation.getLat());
-              args.add(riderId);
-              return this.redisClient.geoadd(args).toMulti();
-            }))
-        .flatMap(r -> {
-          Address address = deliveryTask.getRestaurantAddress();
-          return this.redisClient.georadius(List.of(
-              key,
-              Double.toString(address.getLng()),
-              Double.toString(address.getLat()),
-              "30",
-              "km",
-              "COUNT",
-              "1",
-              "ASC"
-          )).map(response -> StreamSupport.stream(response.spliterator(), false)
-              .map(Response::toString)
-              .findFirst()
-          ).toMulti();
-        }).toUni();
+    return Multi.createFrom()
+        .items(riders.stream())
+        .flatMap(
+            riderId ->
+                this.getCurrentPosition(riderId)
+                    .toMulti()
+                    .flatMap(
+                        geoLocation -> {
+                          List<String> args = new ArrayList<>(4);
+                          args.add(key);
+                          args.add(geoLocation.getLng());
+                          args.add(geoLocation.getLat());
+                          args.add(riderId);
+                          return this.redisClient.geoadd(args).toMulti();
+                        }))
+        .flatMap(
+            r -> {
+              Address address = deliveryTask.getRestaurantAddress();
+              return this.redisClient
+                  .georadius(
+                      List.of(
+                          key,
+                          Double.toString(address.getLng()),
+                          Double.toString(address.getLat()),
+                          "30",
+                          "km",
+                          "COUNT",
+                          "1",
+                          "ASC"))
+                  .map(
+                      response ->
+                          StreamSupport.stream(response.spliterator(), false)
+                              .map(Response::toString)
+                              .findFirst())
+                  .toMulti();
+            })
+        .toUni();
   }
 
-  public Uni<List<String>> search(DeliveryRiderSearch search,
-      Uni<List<String>> existingRiders) {
+  public Uni<List<String>> search(DeliveryRiderSearch search, Uni<List<String>> existingRiders) {
     Address restaurantAddress = search.getDeliveryTask().getRestaurantAddress();
     return this.findRiders(
-        RiderSearchRequest.builder()
-            .lng(restaurantAddress.getLng())
-            .lat(restaurantAddress.getLat())
-            .radius(search.getTryCount() * 10)
-            .count(10)
-            .build())
-        .flatMap(results -> existingRiders.map(riders -> {
-          results.removeAll(riders);
-          return results;
-        }));
+            RiderSearchRequest.builder()
+                .lng(restaurantAddress.getLng())
+                .lat(restaurantAddress.getLat())
+                .radius(search.getTryCount() * 10)
+                .count(10)
+                .build())
+        .flatMap(
+            results ->
+                existingRiders.map(
+                    riders -> {
+                      results.removeAll(riders);
+                      return results;
+                    }));
   }
 
   public Multi<UpdateRiderPositionResponse> updateRiderPosition(
       Multi<UpdateRiderPositionRequest> request) {
-    return request.flatMap(req ->
-        this.updateCurrentPosition(req)
-            .flatMap(r -> this.addRiderPositionForSearch(req))
-            .map(response -> UpdateRiderPositionResponse.newBuilder()
-                .setRiderId(req.getRiderId()).setResult(true).build())
-            .toMulti()
-    );
+    return request.flatMap(
+        req ->
+            this.updateCurrentPosition(req)
+                .flatMap(r -> this.addRiderPositionForSearch(req))
+                .map(
+                    response ->
+                        UpdateRiderPositionResponse.newBuilder()
+                            .setRiderId(req.getRiderId())
+                            .setResult(true)
+                            .build())
+                .toMulti());
   }
 
   private Uni<Response> addRiderPositionForSearch(UpdateRiderPositionRequest request) {
@@ -205,41 +232,51 @@ public class DeliveryService {
 
   private Uni<GeoLocation> getCurrentPosition(String riderId) {
     String key = REDIS_CURRENT_POSITION + riderId;
-    return this.redisClient.hgetall(key).flatMap(response ->
-        Uni.createFrom().optional(Optional.ofNullable(
-            response.size() == 4 ? new GeoLocation(response.get("lng").toString(),
-                response.get("lat").toString())
-                : null))
-    );
+    return this.redisClient
+        .hgetall(key)
+        .flatMap(
+            response ->
+                Uni.createFrom()
+                    .optional(
+                        Optional.ofNullable(
+                            response.size() == 4
+                                ? new GeoLocation(
+                                    response.get("lng").toString(), response.get("lat").toString())
+                                : null)));
   }
 
   public Uni<DisableRiderResponse> disableRider(DisableRiderRequest request) {
-    return this.redisClient.zrem(List.of(REDIS_RIDER_SEARCH, request.getRiderId())).map(response ->
-        DisableRiderResponse.newBuilder()
-            .setRiderId(request.getRiderId())
-            .setResult(
-                Optional.ofNullable(response)
-                    .map(Response::toInteger)
-                    .map(v -> v > 0)
-                    .orElse(false))
-            .build()
-    );
+    return this.redisClient
+        .zrem(List.of(REDIS_RIDER_SEARCH, request.getRiderId()))
+        .map(
+            response ->
+                DisableRiderResponse.newBuilder()
+                    .setRiderId(request.getRiderId())
+                    .setResult(
+                        Optional.ofNullable(response)
+                            .map(Response::toInteger)
+                            .map(v -> v > 0)
+                            .orElse(false))
+                    .build());
   }
 
   public Uni<List<String>> findRiders(RiderSearchRequest request) {
-    return this.redisClient.georadius(List.of(
-        REDIS_RIDER_SEARCH,
-        Double.toString(request.getLng()),
-        Double.toString(request.getLat()),
-        Double.toString(request.getRadius()),
-        "km",
-        "COUNT",
-        Integer.toString(request.getCount()),
-        "ASC"
-    )).map(response ->
-        StreamSupport.stream(response.spliterator(), false)
-            .map(Response::toString)
-            .collect(Collectors.toList()));
+    return this.redisClient
+        .georadius(
+            List.of(
+                REDIS_RIDER_SEARCH,
+                Double.toString(request.getLng()),
+                Double.toString(request.getLat()),
+                Double.toString(request.getRadius()),
+                "km",
+                "COUNT",
+                Integer.toString(request.getCount()),
+                "ASC"))
+        .map(
+            response ->
+                StreamSupport.stream(response.spliterator(), false)
+                    .map(Response::toString)
+                    .collect(Collectors.toList()));
   }
 
   @Value
@@ -274,11 +311,10 @@ public class DeliveryService {
 
     @Override
     public void run() {
-      Optional<String> result = this.deliveryService.selectRider(this.deliveryTask).await()
-          .indefinitely();
+      Optional<String> result =
+          this.deliveryService.selectRider(this.deliveryTask).await().indefinitely();
       if (result != null && result.isPresent()) {
-        LOGGER.infov("Select rider {0} for delivery task {1}", result.get(),
-            this.deliveryTask);
+        LOGGER.infov("Select rider {0} for delivery task {1}", result.get(), this.deliveryTask);
         this.successCallback.accept(this.deliveryTask, result.get());
       } else {
         if (this.attempt < 3) {
@@ -290,8 +326,7 @@ public class DeliveryService {
                   .build());
         } else {
           LOGGER.infov("No riders for delivery task {0}", this.deliveryTask);
-          this.failureCallback.accept(this.deliveryTask,
-              DeliveryTaskStatus.FAILED_NO_RIDERS);
+          this.failureCallback.accept(this.deliveryTask, DeliveryTaskStatus.FAILED_NO_RIDERS);
         }
       }
     }

@@ -15,28 +15,30 @@ public class GeoLocationSearchService {
 
   public static final String REDIS_KEY = "restaurant-search";
 
-  @Inject
-  RedisClient redisClient;
+  @Inject RedisClient redisClient;
 
   public GeoLocationSearchResponse search(GeoLocationSearchRequest request) {
-    Response response = this.redisClient.georadius(
-        List.of(
-            REDIS_KEY,
-            Double.toString(request.getLng()),
-            Double.toString(request.getLat()),
-            Long.toString(request.getRadius()),
-            "m",
-            "WITHDIST",
-            "WITHCOORD")
-    );
-    List<RestaurantWithGeoLocation> restaurants = response.stream()
-        .map(r -> RestaurantWithGeoLocation.builder()
-            .id(r.get(0).toString())
-            .distance(Double.parseDouble(r.get(1).toString()))
-            .lng(Double.parseDouble(r.get(2).get(0).toString()))
-            .lat(Double.parseDouble(r.get(2).get(1).toString()))
-            .build())
-        .collect(Collectors.toList());
+    Response response =
+        this.redisClient.georadius(
+            List.of(
+                REDIS_KEY,
+                Double.toString(request.getLng()),
+                Double.toString(request.getLat()),
+                Long.toString(request.getRadius()),
+                "m",
+                "WITHDIST",
+                "WITHCOORD"));
+    List<RestaurantWithGeoLocation> restaurants =
+        response.stream()
+            .map(
+                r ->
+                    RestaurantWithGeoLocation.builder()
+                        .id(r.get(0).toString())
+                        .distance(Double.parseDouble(r.get(1).toString()))
+                        .lng(Double.parseDouble(r.get(2).get(0).toString()))
+                        .lat(Double.parseDouble(r.get(2).get(1).toString()))
+                        .build())
+            .collect(Collectors.toList());
     return GeoLocationSearchResponse.builder().data(restaurants).build();
   }
 }

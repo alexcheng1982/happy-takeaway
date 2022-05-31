@@ -19,31 +19,28 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/{restaurantId}/order")
 public class OrderResource {
 
-  @Inject
-  OrderService orderService;
+  @Inject OrderService orderService;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Tag(ref = "order")
-  public FindOrdersResponse listOrders(@PathParam("restaurantId") String restaurantId,
+  public FindOrdersResponse listOrders(
+      @PathParam("restaurantId") String restaurantId,
       @QueryParam("status") String status,
       @QueryParam("page") @DefaultValue("0") Integer page,
       @QueryParam("size") @DefaultValue("10") Integer size) {
-    return this.orderService.listOrders(restaurantId, status,
-        PageRequest.newBuilder().setPage(page).setSize(size).build());
+    return this.orderService.listOrders(
+        restaurantId, status, PageRequest.newBuilder().setPage(page).setSize(size).build());
   }
 
   @Path("{orderId}/confirm")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Tag(ref = "order")
-  public ConfirmOrderResponse confirmOrder(@PathParam("restaurantId") String restaurantId,
-      @PathParam("orderId") String orderId) {
+  public ConfirmOrderResponse confirmOrder(
+      @PathParam("restaurantId") String restaurantId, @PathParam("orderId") String orderId) {
     boolean result = this.orderService.confirmOrder(restaurantId, orderId);
-    return ConfirmOrderResponse.builder()
-        .orderId(orderId)
-        .result(result)
-        .build();
+    return ConfirmOrderResponse.builder().orderId(orderId).result(result).build();
   }
 
   @Path("{orderId}/markAsReadyForDelivery")
@@ -51,12 +48,8 @@ public class OrderResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Tag(ref = "order")
   public MarkAsReadyForDeliveryResponse markAsReadyForDelivery(
-      @PathParam("restaurantId") String restaurantId,
-      @PathParam("orderId") String orderId) {
+      @PathParam("restaurantId") String restaurantId, @PathParam("orderId") String orderId) {
     boolean result = this.orderService.markAsReadyForDelivery(restaurantId, orderId);
-    return MarkAsReadyForDeliveryResponse.builder()
-        .orderId(orderId)
-        .result(result)
-        .build();
+    return MarkAsReadyForDeliveryResponse.builder().orderId(orderId).result(result).build();
   }
 }

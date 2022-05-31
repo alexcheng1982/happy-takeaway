@@ -14,12 +14,8 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 @OpenAPIDefinition(
-    info = @Info(
-        title = "Rider API",
-        version = "1.0.0"
-    ),
-    tags = @Tag(name = "Rider", description = "Rider")
-)
+    info = @Info(title = "Rider API", version = "1.0.0"),
+    tags = @Tag(name = "Rider", description = "Rider"))
 @ApplicationScoped
 public class RiderRoutes {
 

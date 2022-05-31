@@ -13,8 +13,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class FullTextSearchWebRequest {
 
-  @NonNull
-  private String query;
+  @NonNull private String query;
 
   private BigDecimal minPrice;
 

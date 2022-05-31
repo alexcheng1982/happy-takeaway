@@ -18,20 +18,21 @@ import org.jboss.logging.Logger;
 @Singleton
 public class OrderEventsSocket {
 
-  @Inject
-  Logger logger;
+  @Inject Logger logger;
 
   Map<String, CopyOnWriteArraySet<Session>> sessions = new ConcurrentHashMap<>();
 
   @OnOpen
   public void onOpen(Session session, @PathParam("id") String id) {
     this.logger.infov("Session open for restaurant {0}", id);
-    this.sessions.compute(id, (key, existingSessions) -> {
-      CopyOnWriteArraySet<Session> sessions =
-          existingSessions != null ? existingSessions : new CopyOnWriteArraySet<>();
-      sessions.add(session);
-      return sessions;
-    });
+    this.sessions.compute(
+        id,
+        (key, existingSessions) -> {
+          CopyOnWriteArraySet<Session> sessions =
+              existingSessions != null ? existingSessions : new CopyOnWriteArraySet<>();
+          sessions.add(session);
+          return sessions;
+        });
   }
 
   @OnClose
@@ -47,23 +48,28 @@ public class OrderEventsSocket {
   }
 
   private void removeSession(String id, Session session) {
-    this.sessions.computeIfPresent(id, (key, sessions) -> {
-      sessions.remove(session);
-      return sessions;
-    });
+    this.sessions.computeIfPresent(
+        id,
+        (key, sessions) -> {
+          sessions.remove(session);
+          return sessions;
+        });
   }
 
   public void sendEvent(String restaurantId, Object event) {
     CopyOnWriteArraySet<Session> sessions = this.sessions.get(restaurantId);
     if (sessions != null) {
       sessions.forEach(
-          session -> session.getAsyncRemote().sendText(JsonMapper.toJson(event),
-              result -> {
-                if (!result.isOK()) {
-                  this.logger
-                      .warnv(result.getException(), "Failed to send message");
-                }
-              }));
+          session ->
+              session
+                  .getAsyncRemote()
+                  .sendText(
+                      JsonMapper.toJson(event),
+                      result -> {
+                        if (!result.isOK()) {
+                          this.logger.warnv(result.getException(), "Failed to send message");
+                        }
+                      }));
     }
   }
 }

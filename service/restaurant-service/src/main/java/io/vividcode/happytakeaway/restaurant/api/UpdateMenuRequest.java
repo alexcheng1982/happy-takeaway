@@ -8,10 +8,7 @@ import lombok.NonNull;
 @Builder
 public class UpdateMenuRequest {
 
-  @NonNull
-  private String restaurantId;
-  @NonNull
-  private String id;
-  @NonNull
-  private String name;
+  @NonNull private String restaurantId;
+  @NonNull private String id;
+  @NonNull private String name;
 }

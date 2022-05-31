@@ -25,14 +25,13 @@ public interface RestaurantServiceClient {
   @Path("/{restaurantId}/menu")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  Response createMenu(@PathParam("restaurantId") String restaurantId,
-      CreateMenuWebRequest request);
+  Response createMenu(@PathParam("restaurantId") String restaurantId, CreateMenuWebRequest request);
 
   @Path("/{restaurantId}/menuitem")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  Response createMenuItem(@PathParam("restaurantId") String restaurantId,
-      CreateMenuItemWebRequest request);
+  Response createMenuItem(
+      @PathParam("restaurantId") String restaurantId, CreateMenuItemWebRequest request);
 
   @Path("/{restaurantId}/menu/{menuId}/association")
   @POST

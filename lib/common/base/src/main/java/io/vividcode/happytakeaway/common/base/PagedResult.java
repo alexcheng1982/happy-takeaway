@@ -23,9 +23,8 @@ public class PagedResult<T> {
         .build();
   }
 
-  public static <T> PagedResult<T> fromData(List<T> data,
-      PageRequest pageRequest,
-      long totalItems) {
+  public static <T> PagedResult<T> fromData(
+      List<T> data, PageRequest pageRequest, long totalItems) {
     return PagedResult.<T>builder()
         .data(data)
         .currentPage(pageRequest.getPage())

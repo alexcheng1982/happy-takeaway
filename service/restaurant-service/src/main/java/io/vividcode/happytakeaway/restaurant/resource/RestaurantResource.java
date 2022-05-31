@@ -50,11 +50,9 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/")
 public class RestaurantResource {
 
-  @Inject
-  RestaurantService restaurantService;
+  @Inject RestaurantService restaurantService;
 
-  @Inject
-  FullTextSearchService fullTextSearchService;
+  @Inject FullTextSearchService fullTextSearchService;
 
   @GET
   @Path("{id}")
@@ -63,14 +61,15 @@ public class RestaurantResource {
   @Tag(ref = "restaurant")
   public GetRestaurantWebResponse get(
       @PathParam("id")
-      @Parameter(description = "restaurant id", in = ParameterIn.PATH, required = true)
+          @Parameter(description = "restaurant id", in = ParameterIn.PATH, required = true)
           String id,
-      @QueryParam("numberOfMenuItems") @DefaultValue("0")
-      @Parameter(description = "number of menu items", in = ParameterIn.QUERY)
+      @QueryParam("numberOfMenuItems")
+          @DefaultValue("0")
+          @Parameter(description = "number of menu items", in = ParameterIn.QUERY)
           Integer numberOfMenuItems) {
-    RestaurantWithMenuItems restaurant = this.restaurantService.getRestaurant(
-        GetRestaurantRequest.builder().id(id).numberOfMenuItems(numberOfMenuItems).build()
-    );
+    RestaurantWithMenuItems restaurant =
+        this.restaurantService.getRestaurant(
+            GetRestaurantRequest.builder().id(id).numberOfMenuItems(numberOfMenuItems).build());
     return GetRestaurantWebResponse.builder()
         .id(restaurant.getId())
         .name(restaurant.getName())
@@ -81,73 +80,65 @@ public class RestaurantResource {
   }
 
   @POST
-  @APIResponses(
-      {
-          @APIResponse(
-              responseCode = "201",
-              description = "Created"
-          ),
-          @APIResponse(
-              responseCode = "500",
-              description = "Internal error"
-          )
-      }
-  )
+  @APIResponses({
+    @APIResponse(responseCode = "201", description = "Created"),
+    @APIResponse(responseCode = "500", description = "Internal error")
+  })
   @Operation(summary = "Create a restaurant")
   @Tag(ref = "restaurant")
-  public Response create(@RequestBody(
-      description = "create request",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CreateRestaurantWebRequest.class)
-      )) CreateRestaurantWebRequest request,
+  public Response create(
+      @RequestBody(
+              description = "create request",
+              content =
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = CreateRestaurantWebRequest.class)))
+          CreateRestaurantWebRequest request,
       @Context UriInfo uriInfo) {
-    String id = this.restaurantService.createRestaurant(CreateRestaurantRequest.builder()
-        .name(request.getName())
-        .description(request.getDescription())
-        .phoneNumber(request.getPhoneNumber())
-        .address(request.getAddress())
-        .build());
-    return Response.created(uriInfo.getAbsolutePathBuilder().path(id).build())
-        .build();
+    String id =
+        this.restaurantService.createRestaurant(
+            CreateRestaurantRequest.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .phoneNumber(request.getPhoneNumber())
+                .address(request.getAddress())
+                .build());
+    return Response.created(uriInfo.getAbsolutePathBuilder().path(id).build()).build();
   }
 
   @PATCH
   @Path("{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  @APIResponses(
-      {
-          @APIResponse(
-              responseCode = "200",
-              description = "Updated restaurant",
-              content = @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = UpdateRestaurantWebResponse.class)
-              )
-          ),
-          @APIResponse(
-              responseCode = "500",
-              description = "Internal error"
-          )
-      }
-  )
+  @APIResponses({
+    @APIResponse(
+        responseCode = "200",
+        description = "Updated restaurant",
+        content =
+            @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = UpdateRestaurantWebResponse.class))),
+    @APIResponse(responseCode = "500", description = "Internal error")
+  })
   @Operation(summary = "Update a restaurant")
   @Tag(ref = "restaurant")
   public UpdateRestaurantWebResponse update(
       @PathParam("id")
-      @Parameter(description = "restaurant id", in = ParameterIn.PATH, required = true)
+          @Parameter(description = "restaurant id", in = ParameterIn.PATH, required = true)
           String id,
-      @RequestBody(content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UpdateRestaurantWebRequest.class)
-      )) UpdateRestaurantWebRequest request) {
-    UpdateRestaurantResponse response = this.restaurantService
-        .updateRestaurant(UpdateRestaurantRequest.builder()
-            .id(id)
-            .name(request.getName())
-            .description(request.getDescription())
-            .address(request.getAddress())
-            .build());
+      @RequestBody(
+              content =
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = UpdateRestaurantWebRequest.class)))
+          UpdateRestaurantWebRequest request) {
+    UpdateRestaurantResponse response =
+        this.restaurantService.updateRestaurant(
+            UpdateRestaurantRequest.builder()
+                .id(id)
+                .name(request.getName())
+                .description(request.getDescription())
+                .address(request.getAddress())
+                .build());
     return UpdateRestaurantWebResponse.builder()
         .id(response.getId())
         .name(response.getName())
@@ -160,8 +151,7 @@ public class RestaurantResource {
   @Path("{id}")
   @Tag(ref = "restaurant")
   public Response delete(@PathParam("id") String id) {
-    this.restaurantService
-        .deleteRestaurant(DeleteRestaurantRequest.builder().id(id).build());
+    this.restaurantService.deleteRestaurant(DeleteRestaurantRequest.builder().id(id).build());
     return Response.noContent().build();
   }
 
@@ -169,26 +159,26 @@ public class RestaurantResource {
   @Path("{id}/activeMenu")
   @Produces(MediaType.APPLICATION_JSON)
   @Tag(ref = "restaurant")
-  public SetActiveMenuWebResponse setActiveMenu(@PathParam("id") String id,
-      @RequestBody(content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = SetActiveMenuWebRequest.class)
-      )) SetActiveMenuWebRequest request) {
-    SetActiveMenuResponse response = this.restaurantService
-        .setActiveMenu(SetActiveMenuRequest.builder()
-            .restaurantId(id)
-            .menuId(request.getMenuId())
-            .build());
-    return SetActiveMenuWebResponse.builder()
-        .menuId(response.getMenuId())
-        .build();
+  public SetActiveMenuWebResponse setActiveMenu(
+      @PathParam("id") String id,
+      @RequestBody(
+              content =
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = SetActiveMenuWebRequest.class)))
+          SetActiveMenuWebRequest request) {
+    SetActiveMenuResponse response =
+        this.restaurantService.setActiveMenu(
+            SetActiveMenuRequest.builder().restaurantId(id).menuId(request.getMenuId()).build());
+    return SetActiveMenuWebResponse.builder().menuId(response.getMenuId()).build();
   }
 
   @GET
   @Path("{id}/menuItems")
   @Produces(MediaType.APPLICATION_JSON)
   @Tag(ref = "restaurant")
-  public PagedResult<MenuItem> getMenuItems(@PathParam("id") String id,
+  public PagedResult<MenuItem> getMenuItems(
+      @PathParam("id") String id,
       @QueryParam("page") @DefaultValue("0") Integer page,
       @QueryParam("size") @DefaultValue("10") Integer size) {
     return this.restaurantService.getMenuItems(id, PageRequest.of(page, size));
@@ -200,11 +190,12 @@ public class RestaurantResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Tag(ref = "restaurant")
   public FullTextSearchResponse search(FullTextSearchWebRequest request) {
-    return this.fullTextSearchService.search(FullTextSearchRequest.builder()
-        .query(request.getQuery())
-        .minPrice(request.getMinPrice())
-        .maxPrice(request.getMaxPrice())
-        .pageRequest(PageRequest.of(request.getPage(), request.getSize()))
-        .build());
+    return this.fullTextSearchService.search(
+        FullTextSearchRequest.builder()
+            .query(request.getQuery())
+            .minPrice(request.getMinPrice())
+            .maxPrice(request.getMaxPrice())
+            .pageRequest(PageRequest.of(request.getPage(), request.getSize()))
+            .build());
   }
 }

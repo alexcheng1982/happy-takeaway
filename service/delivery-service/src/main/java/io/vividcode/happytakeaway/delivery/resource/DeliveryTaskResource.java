@@ -14,8 +14,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("deliveryTask")
 public class DeliveryTaskResource {
 
-  @Inject
-  DeliveryTaskRepository deliveryTaskRepository;
+  @Inject DeliveryTaskRepository deliveryTaskRepository;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

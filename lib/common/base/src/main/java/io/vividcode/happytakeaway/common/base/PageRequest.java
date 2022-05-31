@@ -19,9 +19,6 @@ public class PageRequest {
   }
 
   public static PageRequest of(int page, int size) {
-    return PageRequest.builder()
-        .page(page)
-        .size(size)
-        .build();
+    return PageRequest.builder().page(page).size(size).build();
   }
 }

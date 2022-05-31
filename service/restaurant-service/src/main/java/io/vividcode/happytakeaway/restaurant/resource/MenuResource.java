@@ -31,59 +31,60 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/{restaurantId}/menu")
 public class MenuResource {
 
-  @Inject
-  MenuService menuService;
+  @Inject MenuService menuService;
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Tag(ref = "menu")
   public Response create(
       @PathParam("restaurantId") String restaurantId,
-      @RequestBody(content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CreateMenuWebRequest.class)
-      )) CreateMenuWebRequest request,
+      @RequestBody(
+              content =
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = CreateMenuWebRequest.class)))
+          CreateMenuWebRequest request,
       @Context UriInfo uriInfo) {
-    String id = this.menuService.createMenu(CreateMenuRequest.builder()
-        .restaurantId(restaurantId)
-        .name(request.getName())
-        .current(request.isCurrent())
-        .build());
-    return Response.created(uriInfo.getAbsolutePathBuilder().path(id).build())
-        .build();
+    String id =
+        this.menuService.createMenu(
+            CreateMenuRequest.builder()
+                .restaurantId(restaurantId)
+                .name(request.getName())
+                .current(request.isCurrent())
+                .build());
+    return Response.created(uriInfo.getAbsolutePathBuilder().path(id).build()).build();
   }
 
   @Path("{menuId}")
   @PATCH
   @Produces(MediaType.APPLICATION_JSON)
   @Tag(ref = "menu")
-  public UpdateMenuWebResponse update(@PathParam("restaurantId") String restaurantId,
+  public UpdateMenuWebResponse update(
+      @PathParam("restaurantId") String restaurantId,
       @PathParam("menuId") String menuId,
-      @RequestBody(content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UpdateMenuWebRequest.class)
-      ))
+      @RequestBody(
+              content =
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = UpdateMenuWebRequest.class)))
           UpdateMenuWebRequest request) {
-    UpdateMenuResponse response = this.menuService.updateMenu(UpdateMenuRequest.builder()
-        .restaurantId(restaurantId)
-        .id(menuId)
-        .name(request.getName())
-        .build());
-    return UpdateMenuWebResponse.builder()
-        .id(response.getId())
-        .name(response.getName())
-        .build();
+    UpdateMenuResponse response =
+        this.menuService.updateMenu(
+            UpdateMenuRequest.builder()
+                .restaurantId(restaurantId)
+                .id(menuId)
+                .name(request.getName())
+                .build());
+    return UpdateMenuWebResponse.builder().id(response.getId()).name(response.getName()).build();
   }
 
   @Path("{menuId}")
   @DELETE
   @Tag(ref = "menu")
-  public Response delete(@PathParam("restaurantId") String restaurantId,
-      @PathParam("menuId") String menuId) {
-    this.menuService.deleteMenu(DeleteMenuRequest.builder()
-        .restaurantId(restaurantId)
-        .id(menuId)
-        .build());
+  public Response delete(
+      @PathParam("restaurantId") String restaurantId, @PathParam("menuId") String menuId) {
+    this.menuService.deleteMenu(
+        DeleteMenuRequest.builder().restaurantId(restaurantId).id(menuId).build());
     return Response.noContent().build();
   }
 
@@ -94,17 +95,19 @@ public class MenuResource {
   public AssociateMenuItemsWebResponse associateMenuItems(
       @PathParam("restaurantId") String restaurantId,
       @PathParam("menuId") String menuId,
-      @RequestBody(content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = AssociateMenuItemsWebRequest.class)
-      ))
+      @RequestBody(
+              content =
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = AssociateMenuItemsWebRequest.class)))
           AssociateMenuItemsWebRequest request) {
-    AssociateMenuItemsResponse response = this.menuService
-        .associateMenuItems(AssociateMenuItemsRequest.builder()
-            .restaurantId(restaurantId)
-            .menuId(menuId)
-            .menuItems(request.getMenuItems())
-            .build());
+    AssociateMenuItemsResponse response =
+        this.menuService.associateMenuItems(
+            AssociateMenuItemsRequest.builder()
+                .restaurantId(restaurantId)
+                .menuId(menuId)
+                .menuItems(request.getMenuItems())
+                .build());
     return AssociateMenuItemsWebResponse.builder()
         .menuId(response.getMenuId())
         .menuItems(response.getMenuItems())
