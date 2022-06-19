@@ -1,0 +1,12 @@
+bases:
+  - ../../base.yaml
+
+---
+
+releases:
+  - name: opentelemetry-operator
+    namespace: opentelemetry-operator-system
+    chart: ./opentelemetry-operator
+    #    version: 0.7.0
+    values:
+      - values.yaml.gotmpl

@@ -5,6 +5,8 @@ repositories:
     url: https://helm.elastic.co
   - name: jaegertracing
     url: https://jaegertracing.github.io/helm-charts
+  - name: open-telemetry
+    url: https://open-telemetry.github.io/opentelemetry-helm-charts
 
 environments:
   default:
