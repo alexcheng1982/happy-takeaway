@@ -21,11 +21,11 @@ import lombok.Setter;
 public class ProcessedMessageEntity extends PanacheEntityBase {
 
   @Id
-  @Column(name = "consumer_id")
+  @Column(name = "consumer_id", length = 36)
   private String consumerId;
 
   @Id
-  @Column(name = "message_id")
+  @Column(name = "message_id", length = 36)
   private String messageId;
 
   @Column(name = "timestamp")
