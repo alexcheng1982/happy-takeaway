@@ -3,8 +3,11 @@ package io.vividcode.happytakeaway.common.grpc;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StreamObserverHelper {
+  private static final Logger LOGGER = LoggerFactory.getLogger(StreamObserverHelper.class);
 
   private StreamObserverHelper() {}
 
@@ -14,6 +17,7 @@ public class StreamObserverHelper {
       observer.onNext(handler.apply(req));
       observer.onCompleted();
     } catch (Exception e) {
+      LOGGER.warn("Error handling request: {}", req, e);
       observer.onError(getStatus(e).asRuntimeException());
     }
   }
@@ -26,6 +30,7 @@ public class StreamObserverHelper {
         try {
           response.onNext(handler.apply(req));
         } catch (Exception e) {
+          LOGGER.warn("Error handling request: {}", req, e);
           response.onError(StreamObserverHelper.getStatus(e).asRuntimeException());
         }
       }
