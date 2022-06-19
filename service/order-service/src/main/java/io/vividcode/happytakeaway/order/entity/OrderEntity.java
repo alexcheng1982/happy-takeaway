@@ -42,7 +42,7 @@ public class OrderEntity extends TimestampedBaseEntity implements AggregateEntit
   @Column(name = "user_id")
   private String userId;
 
-  @Column(name = "restaurant_id")
+  @Column(name = "restaurant_id", length = 36)
   private String restaurantId;
 
   @Column(name = "status")

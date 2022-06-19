@@ -21,7 +21,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LineItemEntity extends BaseEntity {
 
-  @Column(name = "item_id")
+  @Column(name = "item_id", length = 36)
   @Size(max = 36)
   private String itemId;
 

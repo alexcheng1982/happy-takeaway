@@ -15,7 +15,7 @@ import lombok.Getter;
 public abstract class BaseEntity {
 
   @Id
-  @Column(name = "id")
+  @Column(name = "id", length = 36)
   @Size(max = 36)
   private String id;
 
