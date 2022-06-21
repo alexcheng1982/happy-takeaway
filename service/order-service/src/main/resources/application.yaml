@@ -13,12 +13,6 @@ quarkus:
       - happy_takeaway
     migrate-at-start: true
     baseline-on-migrate: true
-  jaeger:
-    enabled: true
-    agent-host-port: ${JAEGER_HOST:localhost}:${JAEGER_PORT:6831}
-    service-name: order-service
-    sampler-type: const
-    sampler-param: 1
   kubernetes:
     image-pull-policy: IfNotPresent
     env:
@@ -30,13 +24,27 @@ quarkus:
     group: happy-takeaway
     registry:
     insecure: true
+  opentelemetry:
+    enabled: true
+  grpc:
+    server:
+      enable-reflection-service: true
 "%dev":
   quarkus:
+    devservices:
+      enabled: false
+    test:
+      continuous-testing: disabled
     http:
       port: 8087
     grpc:
       server:
         port: 9001
+    opentelemetry:
+      tracer:
+        exporter:
+          otlp:
+            endpoint:http://localhost:4317
 "%test":
   quarkus:
     datasource:

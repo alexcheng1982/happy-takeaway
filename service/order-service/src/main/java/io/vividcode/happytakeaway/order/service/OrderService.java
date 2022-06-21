@@ -1,5 +1,6 @@
 package io.vividcode.happytakeaway.order.service;
 
+import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import io.vividcode.happytakeaway.delivery.api.v1.Address;
 import io.vividcode.happytakeaway.delivery.api.v1.DeliveryTask;
@@ -84,6 +85,10 @@ public class OrderService {
   }
 
   @Transactional
+  @Counted(
+      value = "order.confirmed",
+      extraTags = {"entity", "order"},
+      description = "Confirm order")
   public ConfirmOrderResponse confirmOrder(ConfirmOrderRequest request) {
     String orderId = request.getOrderId();
     boolean result =
