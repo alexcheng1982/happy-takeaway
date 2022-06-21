@@ -1,25 +1,12 @@
 version: '3'
 
 services:
-  redis:
-    image: bitnami/redis:6.2.6
-    environment:
-      - REDIS_PASSWORD=rpassword
-    ports:
-      - "6379:6379"
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
-    environment:
-      - discovery.type=single-node
-    ports:
-      - "9200:9200"
-      - "9300:9300"
   zookeeper:
     image: debezium/zookeeper:1.4.1.Final
     ports:
       - "2181:2181"
     restart: on-failure
-  kafka:
+  kafka: 
     image: debezium/kafka:1.4.1.Final
     ports:
       - "9092:9092"
@@ -62,26 +49,4 @@ services:
     depends_on:
       - kafka
       - kafka-connect
-      - zookeeper
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    ports:
-      - "6831:6831/udp"
-      - "6832:6832/udp"
-      - "5778:5778"
-      - "16686:16686"
-      - "14268:14268"
-  keycloak:
-    image: quay.io/keycloak/keycloak:10.0.2
-    environment:
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=admin
-      - PROXY_ADDRESS_FORWARDING=true
-    ports:
-      - "8180:8080"
-      - "8543:8443"
-volumes:
-  pgadmin:
-  restaurant-db:
-  order-db:
-  delivery-db:
+      - zookeeper 

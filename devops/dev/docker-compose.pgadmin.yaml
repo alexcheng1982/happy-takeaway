@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_USER:-admin@example.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD:-pgadmin}
+    ports:
+      - ${PGADMIN_PORT:-6555}:80
+    volumes:
+      - pgadmin:/root/.pgadmin
+volumes:
+  pgadmin:

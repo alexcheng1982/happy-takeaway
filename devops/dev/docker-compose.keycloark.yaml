@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:10.0.2
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - PROXY_ADDRESS_FORWARDING=true
+    ports:
+      - "8180:8080"
+      - "8543:8443"
