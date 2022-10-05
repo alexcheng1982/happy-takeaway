@@ -37,12 +37,12 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
-    <quarkus.platform.version>2.9.2.Final</quarkus.platform.version>
+    <quarkus.platform.version>2.13.0.Final</quarkus.platform.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <quarkus-plugin.version>2.9.2.Final</quarkus-plugin.version>
+    <quarkus-plugin.version>2.13.0.Final</quarkus-plugin.version>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <lombok.version>1.18.20</lombok.version>
@@ -52,8 +52,8 @@
     <assertj.version>3.21.0</assertj.version>
     <awaitility.version>4.1.0</awaitility.version>
     <jandex-plugin.version>1.2.2</jandex-plugin.version>
-    <grpc.version>1.44.0</grpc.version>
-    <debezium.version>1.8.1.Final</debezium.version>
+    <grpc.version>1.49.0</grpc.version>
+    <debezium.version>1.9.6.Final</debezium.version>
     <microprofile-openapi.version>2.0.1-RC1</microprofile-openapi.version>
     <opentracing-grpc.version>0.0.14</opentracing-grpc.version>
   </properties>
